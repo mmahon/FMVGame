@@ -1,0 +1,46 @@
+===== SCENE: hub_main =====
+Title: The Main Hub
+Description: You stand at the crossroads. Multiple paths lie ahead. You can see a warehouse, an old library, and a path back home.
+Ending: No
+Decision Flags: visited_hub
+
+CHOICES:
+- Investigate the warehouse → warehouse_entrance
+  [requires: !decision:warehouse_locked]
+- Visit the old library → library
+  [requires: item:library_key]
+- Talk to the stranger standing nearby → stranger_convo
+  [requires: !visited:stranger_convo]
+- Give up and go home → home
+
+===== SCENE: warehouse_entrance =====
+Title: Warehouse Entrance
+Description: The door is locked tight. You jiggle the handle but it won't budge. You won't be able to get in this way.
+Ending: No
+Decision Flags: warehouse_locked
+
+CHOICES:
+- Return to the crossroads → hub_main
+
+===== SCENE: stranger_convo =====
+Title: The Stranger
+Description: "Here, you'll need this to get into the library." The stranger hands you a rusty, heavy iron key before walking away without another word.
+Ending: No
+Auto Items: library_key
+
+CHOICES:
+- Return to the crossroads → hub_main
+
+===== SCENE: library =====
+Title: The Old Library
+Description: You unlock the library and find the forbidden book. It reveals everything. You have solved the mystery!
+Ending: Yes
+
+CHOICES:
+
+===== SCENE: home =====
+Title: Home Sweet Home
+Description: You decided to abandon the investigation and go home. You live out the rest of your days in peace, forever wondering what was in that library.
+Ending: Yes
+
+CHOICES:

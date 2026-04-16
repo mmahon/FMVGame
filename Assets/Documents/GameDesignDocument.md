@@ -1,0 +1,144 @@
+---
+description: Overall vision, design philosophy, core experience, mechanics, and structure for the FMV game.
+applicability: Use throughout development to guide design decisions and understand how different elements of the game fit together.
+---
+
+# Game Design Document - FMV Investigation Game
+
+## Core Vision
+A full-motion video (FMV) game in the style of The Spectre Files: Deathstalker, featuring choice-driven narrative branching where player decisions and discoveries shape the available options and ultimate outcome.
+
+**This system is designed as a reusable template** - the entire story can be edited by modifying a simple text file without any coding required.
+
+## Genre & Style
+- **Genre**: FMV Interactive Drama / Investigation
+- **Style**: Choice-driven narrative with conditional branching
+- **Reference**: The Spectre Files: Deathstalker
+
+## Core Experience
+Players navigate through video scenes, making meaningful choices at branch points. The game tracks their journey, collected evidence, and key decisions, which dynamically affect what choices become available later.
+
+## Game Structure
+
+### Scene Architecture
+- **Total Scenes**: ~30 scenes
+- **Structure**: Hub-based flow with variety in the middle sections
+- **Endings**: 3 distinct endings that the narrative collapses toward
+- **Navigation**: Players can revisit locations (hub structure) based on available choices
+
+### Branching Model
+- **Choices per Branch**: 3 choices presented at each decision point
+- **Conditional Choices**: Available choices change based on:
+  - Previously visited scenes
+  - Collected inventory items/evidence
+  - Key decisions made at critical story points
+
+## Core Mechanics
+
+### Choice System
+- At each branch point, present up to 3 choices
+- Choices may have conditions that must be met to appear
+- Conditions can check: visited scenes, inventory items, previous decisions
+
+### State Tracking
+The game maintains persistent state throughout the playthrough:
+
+1. **Scene Visit Tracking**
+   - Records which scenes the player has visited
+   - Enables location-based conditional choices
+   - Prevents/allows revisiting based on story logic
+
+2. **Light Inventory System**
+   - Players collect items/evidence throughout scenes
+   - Inventory items can unlock new dialogue/choice options
+   - Focus on narrative-relevant items rather than complex inventory management
+
+3. **Decision Tracking**
+   - Key story choices are flagged and remembered
+   - Major decisions influence available paths later
+   - Creates branching narrative consequences
+
+### Progression
+- **No Save System**: Single-session playthroughs (may be revisited later)
+- **Replayability**: Multiple paths and endings encourage replays
+- **State Persistence**: All choices and discoveries persist within a single playthrough
+
+## Player Experience Flow
+
+### Typical Loop (Video + Choice Flow)
+1. **Cinematic Phase**: Watch video scene (5-15 seconds)
+   - No choices shown during video
+   - Scene title hidden for immersion
+   - Full cinematic experience
+2. **Choice Phase**: Video ends, freezes on static image
+   - Scene title appears overlaid
+   - Scene description visible
+   - Three choices appear (conditionally based on state)
+3. **Decision**: Player evaluates and selects choice
+4. **Transition**: Selected choice leads to next scene
+5. **Repeat**: New scene starts with its video
+6. **Ending**: Reach one of 7 endings, option to restart
+
+### Fallback Behavior
+- If no video exists for a scene, static image shows immediately
+- Player doesn't notice missing videos (graceful degradation)
+- System always shows choices after video or immediately with static image
+
+### Hub Structure
+- Central location(s) where multiple paths branch out
+- Players can return to hub to explore different paths
+- Unlocked choices appear as investigation progresses
+
+## Content Design
+
+### Visual Style
+- Moody, atmospheric FMV-style still images
+- Film noir / mystery thriller aesthetic
+- Cinematic lighting with dramatic shadows
+- Realistic rendering with stylized composition
+- Dark, desaturated color palette with selective color highlights
+
+### Current Implementation
+- 27 atmospheric 2D images for all scenes
+- Each image crafted to match scene mood and description
+- Images enhance narrative immersion
+- Scene descriptions provide additional context
+
+### Future Evolution
+- Real video footage can replace static images
+- Maintain same narrative structure and branching
+- Static images serve as concept references for video production
+
+## Design Pillars
+1. **Meaningful Choices**: Every decision should feel consequential
+2. **Conditional Branching**: State-driven choice availability creates dynamic storytelling
+3. **Investigation Focus**: Discovering items and information unlocks new paths
+4. **Replayability**: Multiple endings and hidden paths reward exploration
+5. **Accessibility**: Story editing requires no coding - just edit a text file
+
+## Template System
+
+This game is built on a **reusable FMV template** that allows anyone to create their own interactive video game:
+
+### What Makes It Template-Ready
+- **No Coding Required**: Edit story in `Scenes.txt` markdown file
+- **Simple Format**: Easy-to-understand text structure
+- **Full Feature Set**: Conditions, items, decisions, branching
+- **Video Support**: Drop in MP4 files and they play automatically
+- **Image Fallbacks**: Static images work if videos don't exist
+- **Instant Testing**: Edit text → Press Play → See changes
+
+### Using This as a Template
+1. Open `Assets/Resources/FMV/Scenes.txt`
+2. Replace scenes with your own story
+3. Add your images/videos
+4. Test and iterate
+
+See `TEMPLATE_GUIDE.md` for complete instructions.
+
+## Future Considerations
+- Save/Load system (deferred)
+- More complex inventory interactions
+- Additional ending variations
+- Timeline/flowchart visualization for players
+- Scene editor GUI tool
