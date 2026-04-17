@@ -60,6 +60,9 @@ namespace FMV.Core
                             case "ending":
                                 scene.IsEnding = (val.Equals("yes", StringComparison.OrdinalIgnoreCase) || val.Equals("true", StringComparison.OrdinalIgnoreCase));
                                 break;
+                            case "auto advance":
+                                scene.AutoAdvanceSceneId = val;
+                                break;
                             case "auto items":
                                 foreach (var item in val.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {

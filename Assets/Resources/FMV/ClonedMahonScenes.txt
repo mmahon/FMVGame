@@ -1,0 +1,88 @@
+===== SCENE: a1_the_perimeter =====
+Title: The Perimeter
+Description: The player is crouching in the rain behind a concrete barrier. Fifty yards away is the main gate, guarded by a single security officer in a booth. To the left is a dark, wooded area hugging the perimeter fence. To the right is a delivery truck idling while the driver checks paperwork.
+Ending: No
+Decision Flags: a1_the_perimeter
+
+CHOICES:
+- Sneak into the truck → a1_loading_dock  
+- Bluff your way in → a1_courtyard
+- Look for another entrance → a1_blind_spot
+
+===== SCENE: a1_loading_dock =====
+Title: The Loading Dock
+Description: The truck parks. The driver starts rolling up the back door. The player has seconds to react.
+Ending: No
+
+
+CHOICES:
+- Ambush the driver → a2_captured
+- Hide in a crate → a2_basement
+- Make a break for it! → a1_blind_spot
+
+===== SCENE: a1_courtyard =====
+Title: The Courtyard
+Description: As you approach the front door another security guard asks what you are doing here.
+Ending: No
+
+
+CHOICES:
+- Say "I'm here to meet the director" → a2_hallway
+- Say "I'm new, and I'm not sure where to report" → a2_hallway
+- Make a break for it! → a2_captured
+
+===== SCENE: a1_blind_spot =====
+Title: The Blind Spot
+Description: You run around the back side of the building. You see a service entrance with an open window above it. There is also a large vent here.
+
+Ending: No
+
+
+CHOICES:
+- Climb the drainpipe → a2_captured
+- Use a lockpick on the door → a2_hallway
+- Climb into the ductwork → a2_basement
+
+===== SCENE: a2_captured =====
+Title: Captured!
+Description: The player wakes up groggy in a dim security closet. Their hands are zip-tied behind their back to a cheap wooden chair. Through the frosted glass of the door, they can see the silhouette of a guard pacing and listening to a football game on the radio.
+Ending: No
+
+CHOICES:
+- Try Wriggle free of your binds → a2_end_jail
+- Flip backwards and smash the chair → a2_end_jail
+- Cry out that you're having a heart attack → a2_end_jail 
+
+===== SCENE: a2_basement =====
+Title: The Basement
+Description: The player drops out of a vent (or climbs out of a drain) into a dark, industrial sub-basement. Pipes are hissing. Without their flashlight, they can barely see.
+Ending: No
+
+CHOICES:
+- Climb back into the vent and try again → a2_captured
+- Run up the stairs → a2_hallway
+- Try and turn off the steam vent → a2_captured 
+
+===== SCENE: a2_hallway =====
+Title: The Hallway
+Description: The player is in a pristine, brightly lit administrative hallway. Ahead is the receptionist. To the right there's a door marked server room. A security camera slowly pans across the hallway.
+Ending: No
+
+CHOICES:
+- Walk confidently to the server room → a2_end_win
+- Wait for the camera to pan, then try and sneak into the server room → a2_captured
+- Go see the receptionist → a2_captured 
+
+===== SCENE: a2_end_jail =====
+Title: Jail!
+Description: The guards have had enough of you. You are transferred to a black ops site, never to be seen again
+Ending: Yes
+
+CHOICES:
+
+===== SCENE: a2_end_win =====
+Title: Jail!
+Description: Amazing! You've managed to solve the whole mystery! You like out the rest of your days knowing you're better than everyone else!
+Ending: Yes
+
+CHOICES:

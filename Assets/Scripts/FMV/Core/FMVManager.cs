@@ -100,12 +100,7 @@ namespace FMV.Core
         private IEnumerator SimulateVideoPlayback(FMVScene scene)
         {
             yield return new WaitForSeconds(3.0f);
-            
-            // Re-check just in case scene was changed unexpectedly during the 3 seconds
-            if (CurrentScene == scene)
-            {
-                OnChoicePhaseStarted?.Invoke(scene);
-            }
+            HandleVideoFinished(scene);
         }
 
         public void MakeChoice(FMVChoice choice)
@@ -121,7 +116,21 @@ namespace FMV.Core
 
         private void OnVideoFinished(VideoPlayer source)
         {
-            OnChoicePhaseStarted?.Invoke(CurrentScene);
+            HandleVideoFinished(CurrentScene);
+        }
+
+        private void HandleVideoFinished(FMVScene scene)
+        {
+            if (CurrentScene != scene) return;
+
+            if (!string.IsNullOrEmpty(scene.AutoAdvanceSceneId))
+            {
+                LoadScene(scene.AutoAdvanceSceneId);
+            }
+            else
+            {
+                OnChoicePhaseStarted?.Invoke(scene);
+            }
         }
 
         private void OnDestroy()
