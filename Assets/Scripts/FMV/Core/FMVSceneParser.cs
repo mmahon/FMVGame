@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using UnityEngine;
 using FMV.Data;
 
 namespace FMV.Core
 {
     public static class FMVSceneParser
     {
+        private static readonly Regex RequiresRegex = new Regex(@"\[\s*requires\s*:\s*(.+?)\s*\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex SetsRegex = new Regex(@"\[\s*sets\s*:\s*(.+?)\s*\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         public static Dictionary<string, FMVScene> ParseScenes(string text)
         {
             var scenes = new Dictionary<string, FMVScene>();
@@ -30,41 +35,43 @@ namespace FMV.Core
                 for (int i = 0; i < lines.Count; i++)
                 {
                     string line = lines[i].Trim();
-                    if (line == "CHOICES:")
+                    if (string.IsNullOrEmpty(line)) continue;
+
+                    if (line.Equals("CHOICES:", StringComparison.OrdinalIgnoreCase))
                     {
                         choicesIndex = i;
                         break;
                     }
 
-                    if (line.StartsWith("Title:", StringComparison.OrdinalIgnoreCase))
+                    int colonIdx = line.IndexOf(':');
+                    if (colonIdx > 0)
                     {
-                        scene.Title = line.Substring(6).Trim();
-                    }
-                    else if (line.StartsWith("Description:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        scene.Description = line.Substring(12).Trim();
-                    }
-                    else if (line.StartsWith("Ending:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        string val = line.Substring(7).Trim().ToLower();
-                        scene.IsEnding = (val == "yes" || val == "true");
-                    }
-                    else if (line.StartsWith("Auto Items:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        string itemsStr = line.Substring(11).Trim();
-                        var items = itemsStr.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                        foreach(var item in items)
+                        string key = line.Substring(0, colonIdx).Trim().ToLower();
+                        string val = line.Substring(colonIdx + 1).Trim();
+
+                        switch (key)
                         {
-                            if (!string.IsNullOrWhiteSpace(item)) scene.AutoItems.Add(item.Trim());
-                        }
-                    }
-                    else if (line.StartsWith("Decision Flags:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        string flagsStr = line.Substring(15).Trim();
-                        var flags = flagsStr.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                        foreach(var flag in flags)
-                        {
-                            if (!string.IsNullOrWhiteSpace(flag)) scene.DecisionFlags.Add(flag.Trim());
+                            case "title":
+                                scene.Title = val;
+                                break;
+                            case "description":
+                                scene.Description = val;
+                                break;
+                            case "ending":
+                                scene.IsEnding = (val.Equals("yes", StringComparison.OrdinalIgnoreCase) || val.Equals("true", StringComparison.OrdinalIgnoreCase));
+                                break;
+                            case "auto items":
+                                foreach (var item in val.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    if (!string.IsNullOrWhiteSpace(item)) scene.AutoItems.Add(item.Trim());
+                                }
+                                break;
+                            case "decision flags":
+                                foreach (var flag in val.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    if (!string.IsNullOrWhiteSpace(flag)) scene.DecisionFlags.Add(flag.Trim());
+                                }
+                                break;
                         }
                     }
                 }
@@ -75,12 +82,13 @@ namespace FMV.Core
 
                     for (int i = choicesIndex + 1; i < lines.Count; i++)
                     {
-                        string line = lines[i].TrimStart();
+                        string line = lines[i].Trim();
+                        if (string.IsNullOrEmpty(line)) continue;
 
-                        if (line.StartsWith("- "))
+                        if (line.StartsWith("-"))
                         {
                             currentChoice = new FMVChoice();
-                            string choiceLine = line.Substring(2).Trim();
+                            string choiceLine = line.Substring(1).Trim();
                             
                             int arrowIdx = choiceLine.IndexOf("→");
                             if (arrowIdx == -1) arrowIdx = choiceLine.IndexOf("->");
@@ -99,33 +107,38 @@ namespace FMV.Core
 
                             scene.Choices.Add(currentChoice);
                         }
-                        else if (line.StartsWith("[") && currentChoice != null)
+                        else if (line.StartsWith("[") && line.EndsWith("]") && currentChoice != null)
                         {
-                            string modifier = line.Trim();
-                            if (modifier.StartsWith("[requires: "))
+                            var reqMatch = RequiresRegex.Match(line);
+                            if (reqMatch.Success)
                             {
-                                string reqs = modifier.Substring(11, modifier.Length - 12);
+                                string reqs = reqMatch.Groups[1].Value;
                                 var conditions = reqs.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 foreach(var cond in conditions)
                                 {
                                     string c = cond.Trim();
-                                    if (c.StartsWith("item:"))
+                                    string cLower = c.ToLower();
+                                    if (cLower.StartsWith("item:"))
                                         currentChoice.Conditions.Add(new FMVCondition(ConditionType.HasItem, c.Substring(5).Trim()));
-                                    else if (c.StartsWith("!item:"))
+                                    else if (cLower.StartsWith("!item:"))
                                         currentChoice.Conditions.Add(new FMVCondition(ConditionType.DoesNotHaveItem, c.Substring(6).Trim()));
-                                    else if (c.StartsWith("visited:"))
+                                    else if (cLower.StartsWith("visited:"))
                                         currentChoice.Conditions.Add(new FMVCondition(ConditionType.HasVisited, c.Substring(8).Trim()));
-                                    else if (c.StartsWith("!visited:"))
+                                    else if (cLower.StartsWith("!visited:"))
                                         currentChoice.Conditions.Add(new FMVCondition(ConditionType.HasNotVisited, c.Substring(9).Trim()));
-                                    else if (c.StartsWith("decision:"))
+                                    else if (cLower.StartsWith("decision:"))
                                         currentChoice.Conditions.Add(new FMVCondition(ConditionType.HasMadeDecision, c.Substring(9).Trim()));
-                                    else if (c.StartsWith("!decision:"))
+                                    else if (cLower.StartsWith("!decision:"))
                                         currentChoice.Conditions.Add(new FMVCondition(ConditionType.HasNotMadeDecision, c.Substring(10).Trim()));
+                                    else
+                                        Debug.LogWarning($"[FMVParser] Unrecognized condition: '{c}' in scene '{sceneId}'");
                                 }
                             }
-                            else if (modifier.StartsWith("[sets: "))
+
+                            var setMatch = SetsRegex.Match(line);
+                            if (setMatch.Success)
                             {
-                                string setsStr = modifier.Substring(7, modifier.Length - 8);
+                                string setsStr = setMatch.Groups[1].Value;
                                 var setsTokens = setsStr.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 foreach(var t in setsTokens)
                                 {

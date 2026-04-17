@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
+using TMPro;
 using FMV.Core;
 using FMV.UI;
 
@@ -9,6 +10,9 @@ public class FMVSceneSetup
     [MenuItem("FMV/Initialize Sample Scene")]
     public static void InitializeScene()
     {
+        // 0. Load Font Asset
+        TMP_FontAsset customFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Fonts/Archivo_Condensed-Medium SDF.asset");
+
         // 1. Create main manager
         GameObject fmvObj = new GameObject("FMV Manager");
         FMVManager manager = fmvObj.AddComponent<FMVManager>();
@@ -17,7 +21,12 @@ public class FMVSceneSetup
         GameObject canvasObj = new GameObject("FMV Canvas");
         Canvas canvas = canvasObj.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvasObj.AddComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        
+        CanvasScaler scaler = canvasObj.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920, 1080);
+        scaler.matchWidthOrHeight = 0.5f;
+        
         canvasObj.AddComponent<GraphicRaycaster>();
 
         // 3. Create UI Controller
@@ -39,12 +48,13 @@ public class FMVSceneSetup
         // 5. Title Text
         GameObject titleObj = new GameObject("Title Text");
         titleObj.transform.SetParent(videoAreaObj.transform, false);
-        Text titleText = titleObj.AddComponent<Text>();
+        TextMeshProUGUI titleText = titleObj.AddComponent<TextMeshProUGUI>();
         titleText.text = "Scene Title";
-        titleText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        titleText.fontSize = 48;
-        titleText.alignment = TextAnchor.LowerLeft;
+        if (customFont != null) titleText.font = customFont;
+        titleText.fontSize = 80;
+        titleText.alignment = TextAlignmentOptions.BottomLeft;
         titleText.color = Color.white;
+        titleText.enableWordWrapping = true;
         RectTransform titleRt = titleObj.GetComponent<RectTransform>();
         titleRt.anchorMin = new Vector2(0.05f, 0.05f);
         titleRt.anchorMax = new Vector2(0.95f, 0.2f);
@@ -55,12 +65,14 @@ public class FMVSceneSetup
         // 6. Description Text
         GameObject descObj = new GameObject("Description Text");
         descObj.transform.SetParent(canvasObj.transform, false);
-        Text descText = descObj.AddComponent<Text>();
+        TextMeshProUGUI descText = descObj.AddComponent<TextMeshProUGUI>();
         descText.text = "Scene Description goes here...";
-        descText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        descText.fontSize = 24;
-        descText.alignment = TextAnchor.UpperLeft;
+        if (customFont != null) descText.font = customFont;
+        descText.fontSize = 42;
+        descText.alignment = TextAlignmentOptions.TopLeft;
         descText.color = Color.white;
+        descText.enableWordWrapping = true;
+        descText.overflowMode = TextOverflowModes.Overflow;
         RectTransform descRt = descObj.GetComponent<RectTransform>();
         descRt.anchorMin = new Vector2(0.05f, 0.25f);
         descRt.anchorMax = new Vector2(0.95f, 0.35f);
@@ -74,7 +86,7 @@ public class FMVSceneSetup
         VerticalLayoutGroup vlg = choicesContainer.AddComponent<VerticalLayoutGroup>();
         vlg.childControlHeight = false;
         vlg.childControlWidth = true;
-        vlg.spacing = 10;
+        vlg.spacing = 20;
         RectTransform choicesRt = choicesContainer.GetComponent<RectTransform>();
         choicesRt.anchorMin = new Vector2(0.1f, 0.05f);
         choicesRt.anchorMax = new Vector2(0.9f, 0.2f);
@@ -88,16 +100,17 @@ public class FMVSceneSetup
         btnImage.color = new Color(0.2f, 0.2f, 0.2f);
         buttonPrefab.AddComponent<Button>();
         RectTransform btnRt = buttonPrefab.GetComponent<RectTransform>();
-        btnRt.sizeDelta = new Vector2(0, 40);
+        btnRt.sizeDelta = new Vector2(0, 80);
 
         GameObject btnTextObj = new GameObject("Text");
         btnTextObj.transform.SetParent(buttonPrefab.transform, false);
-        Text btnText = btnTextObj.AddComponent<Text>();
+        TextMeshProUGUI btnText = btnTextObj.AddComponent<TextMeshProUGUI>();
         btnText.text = "Choice Text";
-        btnText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        btnText.fontSize = 20;
-        btnText.alignment = TextAnchor.MiddleCenter;
+        if (customFont != null) btnText.font = customFont;
+        btnText.fontSize = 36;
+        btnText.alignment = TextAlignmentOptions.Center;
         btnText.color = Color.white;
+        btnText.enableWordWrapping = true;
         RectTransform btnTextRt = btnTextObj.GetComponent<RectTransform>();
         btnTextRt.anchorMin = Vector2.zero;
         btnTextRt.anchorMax = Vector2.one;

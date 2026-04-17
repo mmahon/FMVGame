@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using FMV.Core;
 using FMV.Data;
 
@@ -10,8 +11,8 @@ namespace FMV.UI
         [Header("UI Elements")]
         public GameObject CanvasRoot;
         public RawImage VideoArea;
-        public Text TitleText;
-        public Text DescriptionText;
+        public TextMeshProUGUI TitleText;
+        public TextMeshProUGUI DescriptionText;
         public Transform ChoicesContainer;
         public GameObject ChoiceButtonPrefab;
 
@@ -27,8 +28,17 @@ namespace FMV.UI
             }
             
             if (ChoicesContainer != null) ChoicesContainer.gameObject.SetActive(false);
-            if (TitleText != null) TitleText.text = "";
-            if (DescriptionText != null) DescriptionText.text = "";
+            if (TitleText != null) 
+            {
+                TitleText.text = "";
+                TitleText.enableWordWrapping = true;
+            }
+            if (DescriptionText != null) 
+            {
+                DescriptionText.text = "";
+                DescriptionText.enableWordWrapping = true;
+                DescriptionText.overflowMode = TextOverflowModes.Overflow;
+            }
 
             if (VideoArea != null) 
             {
@@ -80,8 +90,13 @@ namespace FMV.UI
                     {
                         GameObject btnObj = Instantiate(ChoiceButtonPrefab, ChoicesContainer);
                         btnObj.SetActive(true);
-                        Text btnText = btnObj.GetComponentInChildren<Text>();
+                        TextMeshProUGUI btnText = btnObj.GetComponentInChildren<TextMeshProUGUI>();
                         if (btnText != null) btnText.text = choice.DisplayText;
+                        else
+                        {
+                            Text legacyText = btnObj.GetComponentInChildren<Text>();
+                            if (legacyText != null) legacyText.text = choice.DisplayText;
+                        }
 
                         Button btn = btnObj.GetComponent<Button>();
                         if (btn != null)
@@ -95,8 +110,13 @@ namespace FMV.UI
                 if (scene.Choices.Count == 0 && scene.IsEnding)
                 {
                     GameObject btnObj = Instantiate(ChoiceButtonPrefab, ChoicesContainer);
-                    Text btnText = btnObj.GetComponentInChildren<Text>();
+                    TextMeshProUGUI btnText = btnObj.GetComponentInChildren<TextMeshProUGUI>();
                     if (btnText != null) btnText.text = "Restart";
+                    else
+                    {
+                        Text legacyText = btnObj.GetComponentInChildren<Text>();
+                        if (legacyText != null) legacyText.text = "Restart";
+                    }
                     Button btn = btnObj.GetComponent<Button>();
                     if (btn != null)
                     {
