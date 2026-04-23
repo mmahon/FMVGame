@@ -37,7 +37,7 @@ public class FMVSceneSetup
         GameObject videoAreaObj = new GameObject("Video Area");
         videoAreaObj.transform.SetParent(canvasObj.transform, false);
         RawImage rawImage = videoAreaObj.AddComponent<RawImage>();
-        rawImage.color = Color.black; 
+        rawImage.color = Color.white; 
         RectTransform rtManager = videoAreaObj.GetComponent<RectTransform>();
         rtManager.anchorMin = new Vector2(0, 0.4f);
         rtManager.anchorMax = new Vector2(1, 1);

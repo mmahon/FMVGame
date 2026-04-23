@@ -25,6 +25,13 @@ namespace FMV.UI
             {
                 FMVManager.Instance.OnSceneLoaded += HandleSceneLoaded;
                 FMVManager.Instance.OnChoicePhaseStarted += HandleChoicePhase;
+                
+                // If the manager has already loaded the initial scene before we subscribed, 
+                // we should initialize our UI immediately to avoid missing it.
+                if (FMVManager.Instance.CurrentScene != null)
+                {
+                    HandleSceneLoaded(FMVManager.Instance.CurrentScene);
+                }
             }
             
             if (ChoicesContainer != null) ChoicesContainer.gameObject.SetActive(false);
@@ -50,21 +57,43 @@ namespace FMV.UI
             }
         }
 
+        private void Update()
+        {
+            if (FMVManager.Instance != null && FMVManager.Instance.ActiveVideoPlayer != null && VideoArea != null)
+            {
+                if (FMVManager.Instance.ActiveVideoPlayer.isPlaying && FMVManager.Instance.ActiveVideoPlayer.texture != null)
+                {
+                    VideoArea.texture = FMVManager.Instance.ActiveVideoPlayer.texture;
+                    VideoArea.color = Color.white;
+                }
+            }
+        }
+
         private void HandleSceneLoaded(FMVScene scene)
         {
             if (ChoicesContainer != null) ChoicesContainer.gameObject.SetActive(false);
             if (DescriptionText != null) DescriptionText.text = "";
             if (TitleText != null) TitleText.text = ""; 
-
+            Debug.Log("FMVUIController HandleSceneLoaded");
             // Load static image immediately so it acts as the "video" during the playback phase
-            Texture2D staticImage = Resources.Load<Texture2D>($"Generated2D/FMV/Scenes/{scene.Id}");
+            Debug.Log("FMVUIController loading: " + $"{FMVManager.Instance.ImageAssetsPath}/{scene.Id}");
+            Texture2D staticImage = Resources.Load<Texture2D>($"{FMVManager.Instance.ImageAssetsPath}/{scene.Id}");
             if (staticImage != null)
             {
-                if (VideoArea != null) VideoArea.texture = staticImage;
+                Debug.Log("FMVUIController image not null");
+                if (VideoArea != null) 
+                {
+                    VideoArea.texture = staticImage;
+                    VideoArea.color = Color.white;
+                }
             }
             else if (DefaultFallbackTexture != null)
             {
-                if (VideoArea != null) VideoArea.texture = DefaultFallbackTexture;
+                if (VideoArea != null) 
+                {
+                    VideoArea.texture = DefaultFallbackTexture;
+                    VideoArea.color = Color.white;
+                }
             }
 
             if (ChoicesContainer != null)

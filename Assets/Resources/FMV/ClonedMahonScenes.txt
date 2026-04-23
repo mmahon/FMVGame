@@ -81,7 +81,7 @@ Ending: Yes
 CHOICES:
 
 ===== SCENE: a2_end_win =====
-Title: Jail!
+Title: Victory!
 Description: Amazing! You've managed to solve the whole mystery! You like out the rest of your days knowing you're better than everyone else!
 Ending: Yes
 

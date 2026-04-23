@@ -15,12 +15,14 @@ namespace FMV.Core
         [Header("Settings")]
         public string TextAssetsPath = "FMV/Scenes";
         public string VideoAssetsPath = "FMVVideos";
+        public string ImageAssetsPath = "FMVImages";
         public string InitialSceneId = "hub_main";
 
         [Header("Runtime State")]
         public FMVScene CurrentScene;
         private Dictionary<string, FMVScene> _scenes = new Dictionary<string, FMVScene>();
         private VideoPlayer _videoPlayer;
+        public VideoPlayer ActiveVideoPlayer => _videoPlayer;
 
         public event Action<FMVScene> OnSceneLoaded;
         public event Action<FMVScene> OnChoicePhaseStarted;
@@ -34,6 +36,7 @@ namespace FMV.Core
             }
             Instance = this;
             _videoPlayer = GetComponent<VideoPlayer>();
+            _videoPlayer.renderMode = VideoRenderMode.APIOnly;
             _videoPlayer.loopPointReached += OnVideoFinished;
         }
 

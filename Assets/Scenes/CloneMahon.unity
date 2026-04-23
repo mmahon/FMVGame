@@ -229,7 +229,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FMV.Core.FMVManager
   TextAssetsPath: FMV/ClonedMahonScenes
-  VideoAssetsPath: FMVVideos
+  VideoAssetsPath: FMVVideos/ClonedMahon
+  ImageAssetsPath: FMVImages/ClonedMahon
   InitialSceneId: a1_the_perimeter
 --- !u!328 &128481272
 VideoPlayer:
@@ -1195,7 +1196,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: e0ece3753e9109a41a099af71882636c, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
