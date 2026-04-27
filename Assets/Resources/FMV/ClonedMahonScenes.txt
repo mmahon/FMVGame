@@ -16,7 +16,7 @@ Ending: No
 
 
 CHOICES:
-- Ambush the driver → a2_captured
+- Ambush the driver → a1_guards_rush_in
 - Hide in a crate → a2_basement
 - Make a break for it! → a1_blind_spot
 
@@ -42,6 +42,14 @@ CHOICES:
 - Climb the drainpipe → a2_captured
 - Use a lockpick on the door → a2_hallway
 - Climb into the ductwork → a2_basement
+
+===== SCENE: a1_guards_rush_in =====
+Title: Guards rush in
+Description: 2 guards rush into the truck and subdue our hero.
+Ending: No
+Auto Advance: a2_captured
+
+
 
 ===== SCENE: a2_captured =====
 Title: Captured!
