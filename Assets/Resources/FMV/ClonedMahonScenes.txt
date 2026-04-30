@@ -17,8 +17,15 @@ Ending: No
 
 CHOICES:
 - Ambush the driver → a1_guards_rush_in
-- Hide in a crate → a2_basement
+- Hide in a crate → a1_hide_in_crate
 - Make a break for it! → a1_blind_spot
+
+===== SCENE: a1_hide_in_crate =====
+Title: Player hides in a crate
+Description: player jumps in a crate and is taken away
+Ending: No
+Auto Advance: a2_basement
+
 
 ===== SCENE: a1_courtyard =====
 Title: The Courtyard

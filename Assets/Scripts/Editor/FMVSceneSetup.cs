@@ -56,8 +56,8 @@ public class FMVSceneSetup
         titleText.color = Color.white;
         titleText.enableWordWrapping = true;
         RectTransform titleRt = titleObj.GetComponent<RectTransform>();
-        titleRt.anchorMin = new Vector2(0.05f, 0.05f);
-        titleRt.anchorMax = new Vector2(0.95f, 0.2f);
+        titleRt.anchorMin = new Vector2(0.05f, 0.8f);
+        titleRt.anchorMax = new Vector2(0.95f, 0.95f);
         titleRt.offsetMin = Vector2.zero;
         titleRt.offsetMax = Vector2.zero;
         uiController.TitleText = titleText;
@@ -74,8 +74,8 @@ public class FMVSceneSetup
         descText.enableWordWrapping = true;
         descText.overflowMode = TextOverflowModes.Overflow;
         RectTransform descRt = descObj.GetComponent<RectTransform>();
-        descRt.anchorMin = new Vector2(0.05f, 0.25f);
-        descRt.anchorMax = new Vector2(0.95f, 0.35f);
+        descRt.anchorMin = new Vector2(0.05f, 0.5f);
+        descRt.anchorMax = new Vector2(0.95f, 0.75f);
         descRt.offsetMin = Vector2.zero;
         descRt.offsetMax = Vector2.zero;
         uiController.DescriptionText = descText;
@@ -89,7 +89,7 @@ public class FMVSceneSetup
         vlg.spacing = 20;
         RectTransform choicesRt = choicesContainer.GetComponent<RectTransform>();
         choicesRt.anchorMin = new Vector2(0.1f, 0.05f);
-        choicesRt.anchorMax = new Vector2(0.9f, 0.2f);
+        choicesRt.anchorMax = new Vector2(0.9f, 0.45f);
         choicesRt.offsetMin = Vector2.zero;
         choicesRt.offsetMax = Vector2.zero;
         uiController.ChoicesContainer = choicesContainer.transform;
