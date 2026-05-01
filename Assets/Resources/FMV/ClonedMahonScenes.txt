@@ -6,8 +6,20 @@ Decision Flags: a1_the_perimeter
 
 CHOICES:
 - Sneak into the truck → a1_loading_dock  
-- Bluff your way in → a1_courtyard
-- Look for another entrance → a1_blind_spot
+- Cling to the bottom of the truck → a1_climb_under_truck
+- Look for another entrance → a1_look_for_another_entrance
+
+===== SCENE: a1_climb_under_truck =====
+Title: Player hides under the truck
+Description: The player clings to the bottom of the truck to sneak in.
+Ending: No
+Auto Advance: a1_blind_spot
+
+===== SCENE: a1_look_for_another_entrance =====
+Title: Look for another way in.
+Description: The player runs to the back to find another entrance.
+Ending: No
+Auto Advance: a1_blind_spot
 
 ===== SCENE: a1_loading_dock =====
 Title: The Loading Dock
@@ -18,7 +30,13 @@ Ending: No
 CHOICES:
 - Ambush the driver → a1_guards_rush_in
 - Hide in a crate → a1_hide_in_crate
-- Make a break for it! → a1_blind_spot
+- Make a break for it! → a1_break_for_it
+
+===== SCENE: a1_guards_rush_in =====
+Title: Guards rush in
+Description: 2 guards rush into the truck and subdue our hero.
+Ending: No
+Auto Advance: a2_captured
 
 ===== SCENE: a1_hide_in_crate =====
 Title: Player hides in a crate
@@ -26,8 +44,14 @@ Description: player jumps in a crate and is taken away
 Ending: No
 Auto Advance: a2_basement
 
+===== SCENE: a1_break_for_it =====
+Title: Break For it
+Description: n/a
+Ending: No
+Auto Advance: a1_blind_spot
 
-===== SCENE: a1_courtyard =====
+
+===== SCENE: a1_courtyard_not_used? =====
 Title: The Courtyard
 Description: As you approach the front door another security guard asks what you are doing here.
 Ending: No
@@ -40,21 +64,36 @@ CHOICES:
 
 ===== SCENE: a1_blind_spot =====
 Title: The Blind Spot
-Description: You run around the back side of the building. You see a service entrance with an open window above it. There is also a large vent here.
+Description: You see a service entrance with an open window above it. There is also a large vent here.
 
 Ending: No
 
 
 CHOICES:
-- Climb the drainpipe → a2_captured
-- Use a lockpick on the door → a2_hallway
-- Climb into the ductwork → a2_basement
+- Climb the drainpipe → a1_climb_pipe
+- Smash the lock → a1_lockpick
+- Climb into the vent → a1_ductwork
 
-===== SCENE: a1_guards_rush_in =====
-Title: Guards rush in
-Description: 2 guards rush into the truck and subdue our hero.
+
+
+===== SCENE: a1_climb_pipe =====
+Title: Climb Pipe
+Description: Player climbs pipe and is captured
 Ending: No
 Auto Advance: a2_captured
+
+===== SCENE: a1_lockpick =====
+Title: Climb Smash!
+Description: Smashes the lock on the back door
+Ending: No
+Auto Advance: a2_hallway
+
+===== SCENE: a1_ductwork =====
+Title: Into the vent!
+Description: Player climbs into the vent.
+Ending: No
+Auto Advance: a2_basement
+
 
 
 
