@@ -110,11 +110,11 @@ Description: The player drops out of a vent (or climbs out of a drain) into a da
 Ending: No
 
 CHOICES:
-- Climb back into the vent and try again → a2_captured
+- Climb back into the vent and try again → a1_duct_choice
 - Run up the stairs → a2_hallway 
 - Grab the Key Card → a2_basement_keycard 
   [requires: !item:basement_keycard]
-- Go back outside → a1_blind_spot 
+- Climb out window → a1_duct_choice 
 
 ===== SCENE: a2_basement_keycard =====
 Title: Grab the key card
