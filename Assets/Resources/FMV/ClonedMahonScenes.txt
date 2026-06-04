@@ -51,17 +51,6 @@ Ending: No
 Auto Advance: a1_blind_spot
 
 
-===== SCENE: a1_courtyard_not_used? =====
-Title: The Courtyard
-Description: As you approach the front door another security guard asks what you are doing here.
-Ending: No
-
-
-CHOICES:
-- Say "I'm here to meet the director" → a2_hallway
-- Say "I'm new, and I'm not sure where to report" → a2_hallway
-- Make a break for it! → a2_captured
-
 ===== SCENE: a1_blind_spot =====
 Title: The Blind Spot
 Description: You see a service entrance with an open window above it. There is also a large vent here.
@@ -92,9 +81,17 @@ Auto Advance: a2_hallway
 Title: Into the vent!
 Description: Player climbs into the vent.
 Ending: No
-Auto Advance: a2_basement
+Auto Advance: a1_duct_choice
 
+===== SCENE: a1_duct_choice =====
+Title: A three way intersection
+Description: Player climbs into the vent.
+Ending: No
 
+CHOICES:
+- go left → a2_captured
+- go right → a2_basement
+- go straight → a2_hallway
 
 
 ===== SCENE: a2_captured =====
@@ -114,12 +111,21 @@ Ending: No
 
 CHOICES:
 - Climb back into the vent and try again → a2_captured
-- Run up the stairs → a2_hallway
-- Try and turn off the steam vent → a2_captured 
+- Run up the stairs → a2_hallway 
+- Grab the Key Card → a2_basement_keycard 
+  [requires: !item:basement_keycard]
+- Go back outside → a1_blind_spot 
+
+===== SCENE: a2_basement_keycard =====
+Title: Grab the key card
+Description: Player grabs a key card  from storage.
+Ending: No
+Auto Items: basement_keycard
+Auto Advance: a2_basement
 
 ===== SCENE: a2_hallway =====
 Title: The Hallway
-Description: The player is in a pristine, brightly lit administrative hallway. Ahead is the receptionist. To the right there's a door marked server room. A security camera slowly pans across the hallway.
+Description: The player is in a pristine, brightly lit administrative hallway. Ahead is the receptionist. To the right there's a door marked server room. A security camera slowly pans across the hallway. I want to rework this to have a choice dependent on getting a key card from the basement
 Ending: No
 
 CHOICES:

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using FMV.Core;
 using FMV.Data;
+using System.Linq;
 
 namespace FMV.UI
 {
@@ -54,6 +55,7 @@ namespace FMV.UI
                 rt.anchorMax = Vector2.one;
                 rt.offsetMin = Vector2.zero;
                 rt.offsetMax = Vector2.zero;
+                VideoArea.color = Color.black;
             }
         }
 
@@ -113,26 +115,26 @@ namespace FMV.UI
 
             if (ChoicesContainer != null && ChoiceButtonPrefab != null)
             {
-                foreach (var choice in scene.Choices)
-                {
-                    if (choice.IsAvailable())
-                    {
-                        GameObject btnObj = Instantiate(ChoiceButtonPrefab, ChoicesContainer);
-                        btnObj.SetActive(true);
-                        TextMeshProUGUI btnText = btnObj.GetComponentInChildren<TextMeshProUGUI>();
-                        if (btnText != null) btnText.text = choice.DisplayText;
-                        else
-                        {
-                            Text legacyText = btnObj.GetComponentInChildren<Text>();
-                            if (legacyText != null) legacyText.text = choice.DisplayText;
-                        }
+                var validChoices = scene.Choices.Where(c => c.IsAvailable()).ToList();
+                var choicesToDisplay = validChoices.OrderBy(x => UnityEngine.Random.value).Take(3).ToList();
 
-                        Button btn = btnObj.GetComponent<Button>();
-                        if (btn != null)
-                        {
-                            var capturedChoice = choice;
-                            btn.onClick.AddListener(() => OnChoiceClicked(capturedChoice));
-                        }
+                foreach (var choice in choicesToDisplay)
+                {
+                    GameObject btnObj = Instantiate(ChoiceButtonPrefab, ChoicesContainer);
+                    btnObj.SetActive(true);
+                    TextMeshProUGUI btnText = btnObj.GetComponentInChildren<TextMeshProUGUI>();
+                    if (btnText != null) btnText.text = choice.DisplayText;
+                    else
+                    {
+                        Text legacyText = btnObj.GetComponentInChildren<Text>();
+                        if (legacyText != null) legacyText.text = choice.DisplayText;
+                    }
+
+                    Button btn = btnObj.GetComponent<Button>();
+                    if (btn != null)
+                    {
+                        var capturedChoice = choice;
+                        btn.onClick.AddListener(() => OnChoiceClicked(capturedChoice));
                     }
                 }
 

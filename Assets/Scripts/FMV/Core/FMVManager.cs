@@ -17,6 +17,7 @@ namespace FMV.Core
         public string VideoAssetsPath = "FMVVideos";
         public string ImageAssetsPath = "FMVImages";
         public string InitialSceneId = "hub_main";
+        public bool AutoStart = false;
 
         [Header("Runtime State")]
         public FMVScene CurrentScene;
@@ -46,7 +47,10 @@ namespace FMV.Core
             if (_scenes.Count > 0)
             {
                 FMVGameState.Instance.Reset();
-                LoadScene(InitialSceneId);
+                if (AutoStart)
+                {
+                    LoadScene(InitialSceneId);
+                }
             }
             else
             {
@@ -65,6 +69,14 @@ namespace FMV.Core
             else
             {
                 Debug.LogError($"Could not find Scenes.txt text asset at Resources/{TextAssetsPath}");
+            }
+        }
+
+        public void StartGame()
+        {
+            if (CurrentScene == null)
+            {
+                LoadScene(InitialSceneId);
             }
         }
 
