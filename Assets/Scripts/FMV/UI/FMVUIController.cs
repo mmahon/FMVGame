@@ -39,12 +39,12 @@ namespace FMV.UI
             if (TitleText != null) 
             {
                 TitleText.text = "";
-                TitleText.enableWordWrapping = true;
+                TitleText.textWrappingMode = TextWrappingModes.Normal;
             }
             if (DescriptionText != null) 
             {
                 DescriptionText.text = "";
-                DescriptionText.enableWordWrapping = true;
+                DescriptionText.textWrappingMode = TextWrappingModes.Normal;
                 DescriptionText.overflowMode = TextOverflowModes.Overflow;
             }
 
@@ -113,10 +113,29 @@ namespace FMV.UI
             if (DescriptionText != null) DescriptionText.text = scene.Description;
             if (ChoicesContainer != null) ChoicesContainer.gameObject.SetActive(true);
 
+            // Re-apply static freeze-frame image as background for the choice selection phase
+            Texture2D staticImage = Resources.Load<Texture2D>($"{FMVManager.Instance.ImageAssetsPath}/{scene.Id}");
+            if (staticImage != null)
+            {
+                if (VideoArea != null) 
+                {
+                    VideoArea.texture = staticImage;
+                    VideoArea.color = Color.white;
+                }
+            }
+            else if (DefaultFallbackTexture != null)
+            {
+                if (VideoArea != null) 
+                {
+                    VideoArea.texture = DefaultFallbackTexture;
+                    VideoArea.color = Color.white;
+                }
+            }
+
             if (ChoicesContainer != null && ChoiceButtonPrefab != null)
             {
                 var validChoices = scene.Choices.Where(c => c.IsAvailable()).ToList();
-                var choicesToDisplay = validChoices.OrderBy(x => UnityEngine.Random.value).Take(3).ToList();
+                var choicesToDisplay = validChoices.Take(3).OrderBy(x => UnityEngine.Random.value).ToList();
 
                 foreach (var choice in choicesToDisplay)
                 {
@@ -141,6 +160,7 @@ namespace FMV.UI
                 if (scene.Choices.Count == 0 && scene.IsEnding)
                 {
                     GameObject btnObj = Instantiate(ChoiceButtonPrefab, ChoicesContainer);
+                    btnObj.SetActive(true);
                     TextMeshProUGUI btnText = btnObj.GetComponentInChildren<TextMeshProUGUI>();
                     if (btnText != null) btnText.text = "Restart";
                     else
@@ -151,7 +171,17 @@ namespace FMV.UI
                     Button btn = btnObj.GetComponent<Button>();
                     if (btn != null)
                     {
-                        btn.onClick.AddListener(() => FMVManager.Instance.LoadScene(FMVManager.Instance.InitialSceneId));
+                        btn.onClick.AddListener(() => 
+                        {
+                            if (FMVTitleScreen.Instance != null)
+                            {
+                                FMVTitleScreen.Instance.ShowTitleScreen();
+                            }
+                            else
+                            {
+                                FMVManager.Instance.LoadScene(FMVManager.Instance.InitialSceneId);
+                            }
+                        });
                     }
                 }
             }

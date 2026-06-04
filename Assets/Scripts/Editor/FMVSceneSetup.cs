@@ -55,7 +55,7 @@ public class FMVSceneSetup
         titleText.fontSize = 80;
         titleText.alignment = TextAlignmentOptions.BottomLeft;
         titleText.color = Color.white;
-        titleText.enableWordWrapping = true;
+        titleText.textWrappingMode = TextWrappingModes.Normal;
         RectTransform titleRt = titleObj.GetComponent<RectTransform>();
         titleRt.anchorMin = new Vector2(0.05f, 0.8f);
         titleRt.anchorMax = new Vector2(0.95f, 0.95f);
@@ -72,7 +72,7 @@ public class FMVSceneSetup
         descText.fontSize = 42;
         descText.alignment = TextAlignmentOptions.TopLeft;
         descText.color = Color.white;
-        descText.enableWordWrapping = true;
+        descText.textWrappingMode = TextWrappingModes.Normal;
         descText.overflowMode = TextOverflowModes.Overflow;
         RectTransform descRt = descObj.GetComponent<RectTransform>();
         descRt.anchorMin = new Vector2(0.05f, 0.5f);
@@ -111,7 +111,7 @@ public class FMVSceneSetup
         btnText.fontSize = 36;
         btnText.alignment = TextAlignmentOptions.Center;
         btnText.color = Color.white;
-        btnText.enableWordWrapping = true;
+        btnText.textWrappingMode = TextWrappingModes.Normal;
         RectTransform btnTextRt = btnTextObj.GetComponent<RectTransform>();
         btnTextRt.anchorMin = Vector2.zero;
         btnTextRt.anchorMax = Vector2.one;
@@ -262,7 +262,7 @@ public class FMVSceneSetup
         titleScreenScript.CloseOptionsButton = closeOptBtn;
 
         // Ensure EventSystem exists using the new Input System module
-        if (Object.FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null)
+        if (Object.FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
         {
             GameObject esObj = new GameObject("EventSystem");
             esObj.AddComponent<UnityEngine.EventSystems.EventSystem>();
