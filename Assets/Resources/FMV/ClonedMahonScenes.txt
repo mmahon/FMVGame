@@ -36,7 +36,7 @@ CHOICES:
 Title: Guards rush in
 Description: 2 guards rush into the truck and subdue our hero.
 Ending: No
-Auto Advance: a2_captured
+Auto Advance: a2_captured_1
 
 ===== SCENE: a1_hide_in_crate =====
 Title: Player hides in a crate
@@ -69,7 +69,7 @@ CHOICES:
 Title: Climb Pipe
 Description: Player climbs pipe and is captured
 Ending: No
-Auto Advance: a2_captured
+Auto Advance: a2_captured_1
 
 ===== SCENE: a1_lockpick =====
 Title: Climb Smash!
@@ -89,12 +89,12 @@ Description: Player climbs into the vent.
 Ending: No
 
 CHOICES:
-- go left → a2_captured
+- go left → a2_captured_1
 - go right → a2_basement
 - go straight → a2_hallway
 
 
-===== SCENE: a2_captured =====
+===== SCENE: a2_captured_1 =====
 Title: Captured!
 Description: The player wakes up groggy in a dim security closet. Their hands are zip-tied behind their back to a cheap wooden chair. Through the frosted glass of the door, they can see the silhouette of a guard pacing and listening to a football game on the radio.
 Ending: No
@@ -130,8 +130,8 @@ Ending: No
 
 CHOICES:
 - Walk confidently to the server room → a2_end_win
-- Wait for the camera to pan, then try and sneak into the server room → a2_captured
-- Go see the receptionist → a2_captured 
+- Wait for the camera to pan, then try and sneak into the server room → a2_captured_1
+- Go see the receptionist → a2_captured_1 
 
 ===== SCENE: a2_end_jail =====
 Title: Jail!
