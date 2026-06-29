@@ -100,7 +100,27 @@ Description: The player wakes up groggy in a dim security closet. Their hands ar
 Ending: No
 
 CHOICES:
-- Try Wriggle free of your binds → a2_end_jail
+- Try Wriggle free of your binds → a2_hallway
+- Flip backwards and smash the chair → a2_captured_2
+- Cry out that you're having a heart attack → a2_captured_2 
+
+===== SCENE: a2_captured_2 =====
+Title: Captured2!
+Description: The player is caught by a guard
+Ending: No
+
+CHOICES:
+- Try Wriggle free of your binds → a2_hallway
+- Flip backwards and smash the chair → a2_captured_3
+- Cry out that you're having a heart attack → a2_captured_3 
+
+===== SCENE: a2_captured_3 =====
+Title: Captured3!
+Description: The player is caught by a guard
+Ending: No
+
+CHOICES:
+- Try Wriggle free of your binds → a2_hallway
 - Flip backwards and smash the chair → a2_end_jail
 - Cry out that you're having a heart attack → a2_end_jail 
 
@@ -114,14 +134,18 @@ CHOICES:
 - Run up the stairs → a2_hallway 
 - Grab the Key Card → a2_basement_keycard 
   [requires: !item:basement_keycard]
-- Climb out window → a1_duct_choice 
+- Climb out window → a1_blind_spot 
 
 ===== SCENE: a2_basement_keycard =====
 Title: Grab the key card
 Description: Player grabs a key card  from storage.
 Ending: No
 Auto Items: basement_keycard
-Auto Advance: a2_basement
+
+CHOICES:
+- Climb back into the vent and try again → a1_duct_choice
+- Run up the stairs → a2_hallway 
+- Climb out window → a1_blind_spot 
 
 ===== SCENE: a2_hallway =====
 Title: The Hallway
