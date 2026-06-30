@@ -36,7 +36,7 @@ CHOICES:
 Title: Guards rush in
 Description: 2 guards rush into the truck and subdue our hero.
 Ending: No
-Auto Advance: a2_captured_1
+Auto Advance: captured_routing
 
 ===== SCENE: a1_hide_in_crate =====
 Title: Player hides in a crate
@@ -57,7 +57,6 @@ Description: You see a service entrance with an open window above it. There is a
 
 Ending: No
 
-
 CHOICES:
 - Climb the drainpipe → a1_climb_pipe
 - Smash the lock → a1_lockpick
@@ -69,7 +68,7 @@ CHOICES:
 Title: Climb Pipe
 Description: Player climbs pipe and is captured
 Ending: No
-Auto Advance: a2_captured_1
+Auto Advance: captured_routing
 
 ===== SCENE: a1_lockpick =====
 Title: Climb Smash!
@@ -89,10 +88,19 @@ Description: Player climbs into the vent.
 Ending: No
 
 CHOICES:
-- go left → a2_captured_1
+
 - go right → a2_basement
 - go straight → a2_hallway
+- go left → captured_routing
 
+
+===== SCENE: captured_routing =====
+Title: Gotcha!
+Description: You were caught. You might be in a lot of trouble.
+Ending: No
+Auto Advance: a2_captured_1 [requires: !visited:a2_captured_1]
+Auto Advance: a2_captured_2 [requires: !visited:a2_captured_2]
+Auto Advance: a2_captured_3
 
 ===== SCENE: a2_captured_1 =====
 Title: Captured!
@@ -155,7 +163,7 @@ Ending: No
 CHOICES:
 - Walk confidently to the server room → a2_end_win
 - Wait for the camera to pan, then try and sneak into the server room → a2_captured_1
-- Go see the receptionist → a2_captured_1 
+- Go see the receptionist → captured_routing 
 
 ===== SCENE: a2_end_jail =====
 Title: Jail!

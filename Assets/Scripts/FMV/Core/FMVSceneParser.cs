@@ -61,7 +61,50 @@ namespace FMV.Core
                                 scene.IsEnding = (val.Equals("yes", StringComparison.OrdinalIgnoreCase) || val.Equals("true", StringComparison.OrdinalIgnoreCase));
                                 break;
                             case "auto advance":
-                                scene.AutoAdvanceSceneId = val;
+                                {
+                                    string targetSceneId = val;
+                                    var conditions = new List<FMVCondition>();
+
+                                    var reqMatch = RequiresRegex.Match(val);
+                                    if (reqMatch.Success)
+                                    {
+                                        targetSceneId = val.Replace(reqMatch.Value, "").Trim();
+
+                                        string reqs = reqMatch.Groups[1].Value;
+                                        var condTokens = reqs.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                        foreach (var cond in condTokens)
+                                        {
+                                            string c = cond.Trim();
+                                            string cLower = c.ToLower();
+                                            if (cLower.StartsWith("item:"))
+                                                conditions.Add(new FMVCondition(ConditionType.HasItem, c.Substring(5).Trim()));
+                                            else if (cLower.StartsWith("!item:"))
+                                                conditions.Add(new FMVCondition(ConditionType.DoesNotHaveItem, c.Substring(6).Trim()));
+                                            else if (cLower.StartsWith("visited:"))
+                                                conditions.Add(new FMVCondition(ConditionType.HasVisited, c.Substring(8).Trim()));
+                                            else if (cLower.StartsWith("!visited:"))
+                                                conditions.Add(new FMVCondition(ConditionType.HasNotVisited, c.Substring(9).Trim()));
+                                            else if (cLower.StartsWith("decision:"))
+                                                conditions.Add(new FMVCondition(ConditionType.HasMadeDecision, c.Substring(9).Trim()));
+                                            else if (cLower.StartsWith("!decision:"))
+                                                conditions.Add(new FMVCondition(ConditionType.HasNotMadeDecision, c.Substring(10).Trim()));
+                                            else
+                                                Debug.LogWarning($"[FMVParser] Unrecognized auto-advance condition: '{c}' in scene '{sceneId}'");
+                                        }
+                                    }
+
+                                    scene.AutoAdvances.Add(new FMVAutoAdvance
+                                    {
+                                        TargetSceneId = targetSceneId,
+                                        Conditions = conditions
+                                    });
+
+                                    // Keep AutoAdvanceSceneId updated for fallback/compatibility (use first parsed target)
+                                    if (string.IsNullOrEmpty(scene.AutoAdvanceSceneId))
+                                    {
+                                        scene.AutoAdvanceSceneId = targetSceneId;
+                                    }
+                                }
                                 break;
                             case "auto items":
                                 foreach (var item in val.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))

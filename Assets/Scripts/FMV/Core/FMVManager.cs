@@ -138,7 +138,24 @@ namespace FMV.Core
         {
             if (CurrentScene != scene) return;
 
-            if (!string.IsNullOrEmpty(scene.AutoAdvanceSceneId))
+            FMVAutoAdvance triggered = null;
+            if (scene.AutoAdvances != null && scene.AutoAdvances.Count > 0)
+            {
+                foreach (var autoAdvance in scene.AutoAdvances)
+                {
+                    if (autoAdvance.IsAvailable())
+                    {
+                        triggered = autoAdvance;
+                        break;
+                    }
+                }
+            }
+
+            if (triggered != null)
+            {
+                LoadScene(triggered.TargetSceneId);
+            }
+            else if (!string.IsNullOrEmpty(scene.AutoAdvanceSceneId))
             {
                 LoadScene(scene.AutoAdvanceSceneId);
             }
