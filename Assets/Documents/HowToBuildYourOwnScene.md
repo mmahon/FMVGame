@@ -1,4 +1,4 @@
-# How to Build Your Own Scene
+ # How to Build Your Own Scene
 
 This guide explains how to create, format, and add new scenes to the FMV Game Engine, as well as where to place the associated assets.
 
@@ -38,15 +38,7 @@ CHOICES:
 *   **Title:** (`Title: text`) - The header text shown during the choice phase.
 *   **Description:** (`Description: text`) - The narrative text shown during the choice phase.
 *   **Ending:** (`Ending: yes/true`) - Marks the scene as an ending. If no choices exist, a "Restart" button is spawned.
-*   **Auto Advance:** (`Auto Advance: target_scene_id [requires: conditions]`) - Automatically loads the target scene after the video/image playback finishes, bypassing the choice phase.
-    *   Supports multiple lines/rules (evaluated in order). The first target that meets the conditions is loaded.
-    *   Syntax uses the standard conditions list: `[requires: cond1, cond2]`.
-    *   Example:
-        ```text
-        Auto Advance: a2_captured_1 [requires: !visited:a2_captured_1]
-        Auto Advance: a2_captured_2 [requires: !visited:a2_captured_2]
-        Auto Advance: a2_captured_3
-        ```
+*   **Auto Advance:** (`Auto Advance: target_scene_id`) - Automatically loads the target scene after the video/image playback finishes, bypassing the choice phase.
 *   **Auto Items:** (`Auto Items: item1, item2`) - A comma-separated list of items given to the player immediately upon entering the scene.
 *   **Decision Flags:** (`Decision Flags: flag1, flag2`) - A comma-separated list of flags set to true immediately upon entering the scene.
 
