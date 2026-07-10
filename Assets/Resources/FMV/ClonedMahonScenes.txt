@@ -145,7 +145,7 @@ CHOICES:
 - Climb out window → a1_blind_spot 
 
 ===== SCENE: a2_basement_keycard =====
-Title: Grab the key card
+Title: Grab the key card 
 Description: Player grabs a key card  from storage.
 Ending: No
 Auto Items: basement_keycard
@@ -177,11 +177,16 @@ CHOICES:
   [requires: item:basement_keycard]
 - Enter the side door → a2_basement
   [requires: !item:basement_keycard]
-- Strike up a conversation with the receptionist → captured_routing
 - Enter the side door2 → a2_basement_keycard_gone
-- Try and jump over the barrier next to the receptionist → captured_routing
+  [requires: item:basement_keycard]
+- Try and jump over the barrier next to the receptionist → a2_hallway_jump_barrier
+- Strike up a conversation with the receptionist → captured_routing
 
-
+===== SCENE: a2_hallway_jump_barrier =====
+Title: Rush the Door!
+Description: Player attempts to jump through the security door.
+Ending: No
+Auto Advance: captured_routing
 
 ===== SCENE: a2_end_jail =====
 Title: Jail!
