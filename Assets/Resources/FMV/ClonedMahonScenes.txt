@@ -182,6 +182,16 @@ CHOICES:
 - Try and jump over the barrier next to the receptionist → a2_hallway_jump_barrier
 - Strike up a conversation with the receptionist → captured_routing
 
+===== SCENE: a2_hallway_2 =====
+Title: The Hallway 2
+Description: The hallway continues
+Ending: No
+
+CHOICES:
+- Try and pickpocket the receptionist → a2_hallway_pickpocket
+- Try and talk to the receptionist → a2_hallway_talk_receptionist
+
+
 ===== SCENE: a2_hallway_jump_barrier =====
 Title: Rush the Door!
 Description: Player attempts to jump through the security door.
