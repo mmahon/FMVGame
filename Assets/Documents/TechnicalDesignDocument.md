@@ -215,7 +215,7 @@ See `SCENE_FORMAT_GUIDE.md` for complete documentation.
 **Video Player Implementation**
 - Unity VideoPlayer component attached to FMVManager
 - RenderTexture output (1920x1080)
-- Video files loaded from `Resources/FMVVideos/{sceneId}`
+- Video files loaded from `Resources/FMV/{gameName}/Videos/{sceneId}` (or `Resources/FMV/Videos/{sceneId}` for the default game)
 - Supported formats: .mp4 (H.264), .mov, .webm, .avi
 - Event-driven: `loopPointReached` triggers transition to static phase
 - Error handling: Falls back to static image on video load failure
@@ -239,7 +239,7 @@ Next Scene Transition
 
 **Static Image System**
 - 2D atmospheric images for each scene
-- Images stored in `Resources/Generated2D/FMV/Scenes/`
+- Images stored in `Resources/FMV/{gameName}/Images/` (or `Resources/FMV/Images/` for the default game)
 - Loaded via Resources.Load and cached in memory
 - Displayed using a Canvas RawImage configured for appropriate scaling
 - Serves dual purpose:
@@ -249,7 +249,7 @@ Next Scene Transition
 **Image Loading Strategy**
 - Lazy loading: Images loaded when scene is first visited
 - Cached in Dictionary for subsequent visits
-- Path format: `"Generated2D/FMV/Scenes/{sceneId}"`
+- Path format: `"{ImageAssetsPath}/{sceneId}"`
 
 **UI Behavior**
 - During video playback:

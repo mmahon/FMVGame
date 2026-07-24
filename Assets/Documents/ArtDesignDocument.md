@@ -1,4 +1,4 @@
-﻿---
+---
 description: Art style and visual design for the FMV mystery game.
 applicability: Use whenever generating art assets or making visual design decisions.
 ---
@@ -128,7 +128,7 @@ applicability: Use whenever generating art assets or making visual design decisi
 
 ### Image Format
 - Generated as Texture2D assets
-- Stored in Resources/FMV/Scenes/
+- Stored in Resources/FMV/[GameName]/Images/ (or Resources/FMV/Images/ by default)
 - Displayed using Unity's GUI system
 - ScaleAndCrop mode for consistent framing
 

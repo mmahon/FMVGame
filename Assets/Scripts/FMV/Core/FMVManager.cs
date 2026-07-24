@@ -14,8 +14,8 @@ namespace FMV.Core
 
         [Header("Settings")]
         public string TextAssetsPath = "FMV/Scenes";
-        public string VideoAssetsPath = "FMVVideos";
-        public string ImageAssetsPath = "FMVImages";
+        public string VideoAssetsPath = "FMV/Videos";
+        public string ImageAssetsPath = "FMV/Images";
         public string InitialSceneId = "hub_main";
         public bool AutoStart = false;
 

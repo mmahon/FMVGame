@@ -65,15 +65,15 @@ The engine uses Unity's `Resources` folder to dynamically load content based on 
     *   Path: `Assets/Resources/FMV/Scenes.txt`
     *   *Note: This path can be changed on the FMVManager component (`Text Assets Path`).*
 *   **Videos:**
-    *   Path: `Assets/Resources/FMVVideos/[SceneID].mp4` (or other supported video formats)
+    *   Path: `Assets/Resources/FMV/[GameName]/Videos/[SceneID].mp4` (or `Assets/Resources/FMV/Videos/[SceneID].mp4` for the default game)
     *   *Note: Place video clips here. If a video is found matching the Scene ID, it will play. The folder name can be changed via `Video Assets Path` on FMVManager.*
 *   **Static Images / Fallbacks:**
-    *   Path: `Assets/Resources/FMVImages/[SceneID].png` (or `.jpg`)
+    *   Path: `Assets/Resources/FMV/[GameName]/Images/[SceneID].png` (or `Assets/Resources/FMV/Images/[SceneID].png` for the default game)
     *   *Note: An image matching the Scene ID is shown during video playback (acting as the video if no video exists or while it loads). The folder name can be changed via `Image Assets Path` on FMVManager.*
 
 ## 4. How to Add a Scene to Unity
 
 1.  **Define the Text Data:** Open your `Scenes.txt` file and add a new `===== SCENE: your_scene_id =====` block using the formatting above.
-2.  **Add Visuals:** Drop your video file (`your_scene_id.mp4`) into `Assets/Resources/FMVVideos/` OR drop a static image (`your_scene_id.png`) into `Assets/Resources/FMVImages/`.
+2.  **Add Visuals:** Drop your video file (`your_scene_id.mp4`) into the `Videos/` directory OR drop a static image (`your_scene_id.png`) into the `Images/` directory for your game.
 3.  **Link to it:** Ensure another scene points to your new scene via a Choice (`- Go there -> your_scene_id`) or an Auto Advance (`Auto Advance: your_scene_id`). Alternatively, set it as the `Initial Scene Id` on the `FMVManager` in your active Unity scene to test it immediately.
 4.  **Play:** Press Play in Unity! The `FMVManager` dynamically parses the text file on start, so no extra code or Unity scene creation is required.

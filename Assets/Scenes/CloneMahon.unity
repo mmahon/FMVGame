@@ -1589,9 +1589,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dab9abced9d4547a4dab61c819810f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FMV.Core.FMVManager
-  TextAssetsPath: FMV/ClonedMahonScenes
-  VideoAssetsPath: FMVVideos\ClonedMahon
-  ImageAssetsPath: FMVImages\ClonedMahon
+  TextAssetsPath: FMV/ClonedMahon/ClonedMahonScenes
+  VideoAssetsPath: FMV/ClonedMahon/Videos
+  ImageAssetsPath: FMV/ClonedMahon/Images
   InitialSceneId: a1_the_perimeter
   AutoStart: 0
 --- !u!328 &1459526792
