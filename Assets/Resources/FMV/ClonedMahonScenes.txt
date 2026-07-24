@@ -186,9 +186,14 @@ CHOICES:
 Title: The Hallway 2
 Description: The hallway continues
 Ending: No
+Auto Advance: a2_hallway_2_choice
+
+===== SCENE: a2_hallway_2_choice =====
+Title: The Hallway 3
+Description: The hallway continues
+Ending: No
 
 CHOICES:
-- Try and pickpocket the receptionist → a2_hallway_pickpocket
 - Try and talk to the receptionist → a2_hallway_talk_receptionist
 
 
