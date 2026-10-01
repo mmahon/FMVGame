@@ -6,6 +6,15 @@ How this project is set up for driving the Unity Editor from the command line (f
 
 Unity 6.4 (`6000.4.2f1`), URP 2D. Targets Windows and WebGL.
 
+## Git LFS for media
+
+Video and image files are stored with Git LFS so re-encoded clips don't bloat the repository. `.gitattributes` routes `*.mp4`, `*.mov`, `*.webm`, `*.avi`, `*.png`, `*.jpg` and `*.jpeg` through LFS.
+
+- **Install Git LFS before cloning** (`git lfs install` once per machine). Without it you get small text pointer files instead of the real videos and images, and Unity will show broken or empty assets.
+- **Existing history was not rewritten.** Media committed before LFS was enabled stays in earlier commits as ordinary blobs, so `.git` is still around 120 MB. Only the current files and anything new go through LFS.
+- **Quota.** GitHub Free includes a limited LFS allowance (storage and monthly bandwidth; check github.com/settings/billing for the current figures). Each re-encoded clip adds a full new copy to storage, and each clone or CI download counts against bandwidth. At the current ~120 MB of media this is far from the limit. If the limit is hit, GitHub blocks LFS pushes and downloads until the next month or until a data pack is bought.
+- **When adding a new media type** (for example audio), add it with `git lfs track "*.ext"` and commit `.gitattributes` first, so the files are stored correctly from their first commit.
+
 ## Driving the Editor with the Unity CLI
 
 The Unity CLI talks to a running Editor through the `com.unity.pipeline` package. It can enter and exit Play mode, run C#, read the Console, recompile, run tests and capture the Game view, without touching the Editor window.

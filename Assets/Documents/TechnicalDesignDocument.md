@@ -216,6 +216,8 @@ Missing videos and images are warnings, not errors, because the game degrades gr
 
 ## Visual Content Pipeline
 
+**Source control for media**: videos and images are stored with Git LFS (see `.gitattributes` and `UserDocumentation/DevEnvironment.md`). Anyone cloning the repo needs Git LFS installed, or the media will be pointer text files.
+
 ### Video Playback System (IMPLEMENTED)
 
 **Two-Phase Visual Flow**
