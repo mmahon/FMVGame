@@ -27,7 +27,7 @@ Both are beta/experimental (CLI `1.0.0-beta.12`, `com.unity.pipeline` `0.8.0-exp
    ```powershell
    $env:UNITY_CLI_CHANNEL='beta'; irm https://public-cdn.cloud.unity3d.com/hub/prod/cli/install.ps1 | iex
    ```
-   The binary lands at `%LOCALAPPDATA%\Unity\bin\unity.exe`. It is only on `PATH` in shells opened after the install, so open a new terminal.
+   The binary lands at `%LOCALAPPDATA%\Unity\bin\unity.exe`. It is only on `PATH` in shells opened after the install, so open a new terminal. If `unity` still isn't found, add that folder to your user `PATH` permanently (Settings > System > About > Advanced system settings > Environment Variables), or for one PowerShell session: `$env:Path += ";$env:LOCALAPPDATA\Unity\bin"`.
 2. Add the package to the project (Unity can stay open):
    ```powershell
    unity pipeline install
