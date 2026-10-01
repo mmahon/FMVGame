@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(unity --version)",
+      "Bash(unity status *)",
+      "Bash(unity pipeline list *)",
+      "Bash(unity command)",
+      "Bash(unity command console *)",
+      "Bash(unity command console_status *)",
+      "Bash(unity command clear_console *)",
+      "Bash(unity command editor_play *)",
+      "Bash(unity command editor_stop *)",
+      "Bash(unity command recompile *)",
+      "Bash(unity command screenshot *)",
+      "PowerShell(unity --version)",
+      "PowerShell(unity status *)",
+      "PowerShell(unity pipeline list *)",
+      "PowerShell(unity command)",
+      "PowerShell(unity command console *)",
+      "PowerShell(unity command console_status *)",
+      "PowerShell(unity command clear_console *)",
+      "PowerShell(unity command editor_play *)",
+      "PowerShell(unity command editor_stop *)",
+      "PowerShell(unity command recompile *)",
+      "PowerShell(unity command screenshot *)"
+    ]
+  }
+}
