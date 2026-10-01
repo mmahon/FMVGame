@@ -20,8 +20,8 @@ public static class FMVSceneLinter
             if (!text.Contains("===== SCENE: ")) continue;
 
             files++;
-            string unityPath = path.Replace('\', '/');
-            string dir = Path.GetDirectoryName(unityPath).Replace('\', '/');
+            string unityPath = path.Replace('\\', '/');
+            string dir = Path.GetDirectoryName(unityPath).Replace('\\', '/');
 
             var scenes = FMVSceneParser.ParseScenes(text);
             var issues = Lint(scenes, dir);
