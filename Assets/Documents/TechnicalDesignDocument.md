@@ -197,14 +197,26 @@ Conditions are evaluated at choice display time:
 - **Multiple Conditions**: `[requires: item:a, item:b, visited:c]`
 - **Negative Conditions**: `[requires: !item:bomb]`
 
-See `SCENE_FORMAT_GUIDE.md` for complete documentation.
+See `HowToBuildYourOwnScene.md` for complete documentation.
+
+### Scene Linter
+
+Run **FMV > Lint Scene Files** (`Assets/Scripts/Editor/FMVSceneLinter.cs`) after editing any scene file. It checks every scene file under `Resources/FMV` and reports to the Console. The checks live in a plain `Lint()` function, so they can be called from tests or a build step.
+
+- **Errors**: choice or auto-advance targets that don't exist; choices with no target; `visited:` conditions pointing at unknown scenes; dead-end scenes that aren't endings.
+- **Warnings**: missing video or freeze-frame image for a scene (expected in `Videos/` and `Images/` next to the scene file); scenes unreachable from the first-defined scene; `item:` or `decision:` requirements that nothing ever grants or sets; endings that still have choices; scenes with both auto-advance and choices.
+
+Missing videos and images are warnings, not errors, because the game degrades gracefully without them (see Failure handling above).
 
 ### Testing Branching
 - Debug UI shows current state (visited, inventory, decisions)
 - Can manually add items/flags for testing via debug controls
-- Scene graph visualization would be beneficial (future enhancement)
+- The linter covers static graph problems (dangling targets, orphan scenes); scene graph visualization would still be beneficial (future enhancement)
+- Playtesting can be driven from the command line; see `UserDocumentation/DevEnvironment.md`
 
 ## Visual Content Pipeline
+
+**Source control for media**: videos and images are stored with Git LFS (see `.gitattributes` and `UserDocumentation/DevEnvironment.md`). Anyone cloning the repo needs Git LFS installed, or the media will be pointer text files.
 
 ### Video Playback System (IMPLEMENTED)
 
@@ -218,17 +230,27 @@ See `SCENE_FORMAT_GUIDE.md` for complete documentation.
 - Video files loaded from `Resources/FMV/{gameName}/Videos/{sceneId}` (or `Resources/FMV/Videos/{sceneId}` for the default game)
 - Supported formats: .mp4 (H.264), .mov, .webm, .avi
 - Event-driven: `loopPointReached` triggers transition to static phase
-- Error handling: Falls back to static image on video load failure
+- Clips are prepared (`Prepare()`) and only played once `isPrepared` is true, rather than played immediately
+
+**Failure handling** (all paths end in the same place as a normal video end: auto-advance, or the choice phase)
+- **Missing clip**: no video file for the scene, so a 3-second placeholder timer runs instead (`SimulateVideoPlayback`). This lets a story be playtested before it is filmed.
+- **Decode/playback error**: `VideoPlayer.errorReceived` logs an error and treats the video as finished, so a failed decode (e.g. on WebGL) cannot hang the game.
+- **Prepare timeout**: if a clip is not prepared within `PrepareTimeoutSeconds` (Inspector field, default 10s), an error is logged and the video is skipped. Each frame's contribution to the timeout is capped at 0.25s, so time spent paused or backgrounded does not count against the budget.
+- **Stale callbacks**: `LoadScene` cancels any pending placeholder or prepare routine from the previous scene before starting the new one, so a timer from an earlier visit can never fire for the current scene. `HandleVideoFinished` also ignores any call whose scene is no longer current.
 
 **Video Playback State Machine**
 ```
 Scene Transition
     ↓
-Try Load Video → Video Found? → YES → Play Video
-    ↓                              ↓
-    NO                         Video Ends
-    ↓                              ↓
-Show Static Image ← ← ← ← ← ← ← ← ←
+Cancel pending routine, stop player, unload previous clip
+    ↓
+Try Load Video → Video Found? → YES → Prepare → Prepared in time? → YES → Play Video
+    ↓                                              ↓                       ↓
+    NO                                             NO (timeout/error)  Video Ends
+    ↓                                              ↓                       ↓
+3s placeholder timer                       Log error, skip video           ↓
+    ↓                                              ↓                       ↓
+Show Static Image ← ← ← ← ← ← ← ← ← ← ← ← ← ← ← ←
     ↓
 Display Choices
     ↓
@@ -264,7 +286,7 @@ Next Scene Transition
   - Description visible
 
 **Resource Management**
-- Videos loaded on-demand per scene (not cached)
+- Videos loaded on-demand per scene; the previous scene's clip is unloaded (`Resources.UnloadAsset`) on each scene change, so memory does not grow over a long playthrough
 - Static images cached after first load
 - RenderTexture created once at initialization
 - VideoPlayer component reused for all scenes

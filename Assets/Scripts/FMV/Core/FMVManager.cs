@@ -18,11 +18,15 @@ namespace FMV.Core
         public string ImageAssetsPath = "FMV/Images";
         public string InitialSceneId = "hub_main";
         public bool AutoStart = false;
+        [Tooltip("Seconds to wait for a clip to prepare before skipping it.")]
+        public float PrepareTimeoutSeconds = 10f;
 
         [Header("Runtime State")]
         public FMVScene CurrentScene;
         private Dictionary<string, FMVScene> _scenes = new Dictionary<string, FMVScene>();
         private VideoPlayer _videoPlayer;
+        private VideoClip _loadedClip;
+        private Coroutine _pendingVideoRoutine;
         public VideoPlayer ActiveVideoPlayer => _videoPlayer;
 
         public event Action<FMVScene> OnSceneLoaded;
@@ -39,6 +43,7 @@ namespace FMV.Core
             _videoPlayer = GetComponent<VideoPlayer>();
             _videoPlayer.renderMode = VideoRenderMode.APIOnly;
             _videoPlayer.loopPointReached += OnVideoFinished;
+            _videoPlayer.errorReceived += OnVideoError;
         }
 
         private void Start()
@@ -98,24 +103,72 @@ namespace FMV.Core
 
             OnSceneLoaded?.Invoke(CurrentScene);
 
+            // Drop anything still pending from the previous scene so it can't fire for this one.
+            if (_pendingVideoRoutine != null)
+            {
+                StopCoroutine(_pendingVideoRoutine);
+                _pendingVideoRoutine = null;
+            }
+            _videoPlayer.Stop();
+            _videoPlayer.clip = null;
+            if (_loadedClip != null)
+            {
+                Resources.UnloadAsset(_loadedClip);
+                _loadedClip = null;
+            }
+
             VideoClip clip = Resources.Load<VideoClip>($"{VideoAssetsPath}/{CurrentScene.Id}");
             if (clip != null)
             {
+                _loadedClip = clip;
                 _videoPlayer.clip = clip;
-                _videoPlayer.Play();
+                _pendingVideoRoutine = StartCoroutine(PrepareAndPlay(CurrentScene));
             }
             else
             {
-                _videoPlayer.Stop();
-                _videoPlayer.clip = null;
-                StartCoroutine(SimulateVideoPlayback(CurrentScene));
+                _pendingVideoRoutine = StartCoroutine(SimulateVideoPlayback(CurrentScene));
             }
+        }
+
+        private IEnumerator PrepareAndPlay(FMVScene scene)
+        {
+            _videoPlayer.Prepare();
+
+            float waited = 0f;
+            while (!_videoPlayer.isPrepared)
+            {
+                // Clamp so time spent paused or backgrounded (a huge first delta on resume) doesn't count against the budget.
+                waited += Mathf.Min(Time.unscaledDeltaTime, 0.25f);
+                if (waited >= PrepareTimeoutSeconds)
+                {
+                    Debug.LogError($"Video for scene '{scene.Id}' did not prepare within {PrepareTimeoutSeconds}s; skipping it.");
+                    _pendingVideoRoutine = null;
+                    HandleVideoFinished(scene);
+                    yield break;
+                }
+                yield return null;
+            }
+
+            _pendingVideoRoutine = null;
+            _videoPlayer.Play();
         }
 
         private IEnumerator SimulateVideoPlayback(FMVScene scene)
         {
             yield return new WaitForSeconds(3.0f);
+            _pendingVideoRoutine = null;
             HandleVideoFinished(scene);
+        }
+
+        private void OnVideoError(VideoPlayer source, string message)
+        {
+            Debug.LogError($"Video error in scene '{CurrentScene?.Id}': {message}");
+            if (_pendingVideoRoutine != null)
+            {
+                StopCoroutine(_pendingVideoRoutine);
+                _pendingVideoRoutine = null;
+            }
+            HandleVideoFinished(CurrentScene);
         }
 
         public void MakeChoice(FMVChoice choice)
@@ -170,6 +223,7 @@ namespace FMV.Core
             if (_videoPlayer != null)
             {
                 _videoPlayer.loopPointReached -= OnVideoFinished;
+                _videoPlayer.errorReceived -= OnVideoError;
             }
         }
     }
