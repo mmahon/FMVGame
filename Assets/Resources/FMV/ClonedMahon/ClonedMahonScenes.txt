@@ -194,7 +194,7 @@ Description: The hallway continues
 Ending: No
 
 CHOICES:
-- Try and talk to the receptionist → a2_hallway_talk_receptionist
+- Try and talk to the receptionist → captured_routing
 
 
 ===== SCENE: a2_hallway_jump_barrier =====
