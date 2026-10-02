@@ -273,6 +273,10 @@ Next Scene Transition
 - Cached in Dictionary for subsequent visits
 - Path format: `"{ImageAssetsPath}/{sceneId}"`
 
+**Video area texture**
+- `FMVUIController` shows the scene's freeze-frame image as soon as the scene loads. `FMVManager.OnVideoPlaybackStarted` fires once when a clip starts playing, and the controller then swaps in the video's texture. Nothing reassigns it per frame.
+- When the clip ends, the choice phase applies the scene's freeze-frame image (or `DefaultFallbackTexture`). If neither exists, the video texture stays on screen, which holds the clip's **last frame**. Keep this in mind if you add a default fallback texture: it would replace the last frame on every video scene that has no image of its own.
+
 **UI Behavior**
 - During video playback:
   - Video fills top 40% of screen

@@ -31,6 +31,8 @@ namespace FMV.Core
 
         public event Action<FMVScene> OnSceneLoaded;
         public event Action<FMVScene> OnChoicePhaseStarted;
+        /// <summary>Fired once per clip, right after playback starts, with the texture the frames render into.</summary>
+        public event Action<Texture> OnVideoPlaybackStarted;
 
         private void Awake()
         {
@@ -151,6 +153,7 @@ namespace FMV.Core
 
             _pendingVideoRoutine = null;
             _videoPlayer.Play();
+            OnVideoPlaybackStarted?.Invoke(_videoPlayer.texture);
         }
 
         private IEnumerator SimulateVideoPlayback(FMVScene scene)

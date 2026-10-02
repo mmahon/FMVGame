@@ -69,28 +69,7 @@ namespace FMV.Core
                                     if (reqMatch.Success)
                                     {
                                         targetSceneId = val.Replace(reqMatch.Value, "").Trim();
-
-                                        string reqs = reqMatch.Groups[1].Value;
-                                        var condTokens = reqs.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                        foreach (var cond in condTokens)
-                                        {
-                                            string c = cond.Trim();
-                                            string cLower = c.ToLower();
-                                            if (cLower.StartsWith("item:"))
-                                                conditions.Add(new FMVCondition(ConditionType.HasItem, c.Substring(5).Trim()));
-                                            else if (cLower.StartsWith("!item:"))
-                                                conditions.Add(new FMVCondition(ConditionType.DoesNotHaveItem, c.Substring(6).Trim()));
-                                            else if (cLower.StartsWith("visited:"))
-                                                conditions.Add(new FMVCondition(ConditionType.HasVisited, c.Substring(8).Trim()));
-                                            else if (cLower.StartsWith("!visited:"))
-                                                conditions.Add(new FMVCondition(ConditionType.HasNotVisited, c.Substring(9).Trim()));
-                                            else if (cLower.StartsWith("decision:"))
-                                                conditions.Add(new FMVCondition(ConditionType.HasMadeDecision, c.Substring(9).Trim()));
-                                            else if (cLower.StartsWith("!decision:"))
-                                                conditions.Add(new FMVCondition(ConditionType.HasNotMadeDecision, c.Substring(10).Trim()));
-                                            else
-                                                Debug.LogWarning($"[FMVParser] Unrecognized auto-advance condition: '{c}' in scene '{sceneId}'");
-                                        }
+                                        ParseConditions(reqMatch.Groups[1].Value, conditions, "auto-advance condition", sceneId);
                                     }
 
                                     scene.AutoAdvances.Add(new FMVAutoAdvance
@@ -158,27 +137,7 @@ namespace FMV.Core
                             var reqMatch = RequiresRegex.Match(line);
                             if (reqMatch.Success)
                             {
-                                string reqs = reqMatch.Groups[1].Value;
-                                var conditions = reqs.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                foreach(var cond in conditions)
-                                {
-                                    string c = cond.Trim();
-                                    string cLower = c.ToLower();
-                                    if (cLower.StartsWith("item:"))
-                                        currentChoice.Conditions.Add(new FMVCondition(ConditionType.HasItem, c.Substring(5).Trim()));
-                                    else if (cLower.StartsWith("!item:"))
-                                        currentChoice.Conditions.Add(new FMVCondition(ConditionType.DoesNotHaveItem, c.Substring(6).Trim()));
-                                    else if (cLower.StartsWith("visited:"))
-                                        currentChoice.Conditions.Add(new FMVCondition(ConditionType.HasVisited, c.Substring(8).Trim()));
-                                    else if (cLower.StartsWith("!visited:"))
-                                        currentChoice.Conditions.Add(new FMVCondition(ConditionType.HasNotVisited, c.Substring(9).Trim()));
-                                    else if (cLower.StartsWith("decision:"))
-                                        currentChoice.Conditions.Add(new FMVCondition(ConditionType.HasMadeDecision, c.Substring(9).Trim()));
-                                    else if (cLower.StartsWith("!decision:"))
-                                        currentChoice.Conditions.Add(new FMVCondition(ConditionType.HasNotMadeDecision, c.Substring(10).Trim()));
-                                    else
-                                        Debug.LogWarning($"[FMVParser] Unrecognized condition: '{c}' in scene '{sceneId}'");
-                                }
+                                ParseConditions(reqMatch.Groups[1].Value, currentChoice.Conditions, "condition", sceneId);
                             }
 
                             var setMatch = SetsRegex.Match(line);
@@ -199,6 +158,40 @@ namespace FMV.Core
             }
 
             return scenes;
+        }
+
+        private static readonly (string Prefix, ConditionType Type)[] ConditionPrefixes =
+        {
+            ("item:", ConditionType.HasItem),
+            ("!item:", ConditionType.DoesNotHaveItem),
+            ("visited:", ConditionType.HasVisited),
+            ("!visited:", ConditionType.HasNotVisited),
+            ("decision:", ConditionType.HasMadeDecision),
+            ("!decision:", ConditionType.HasNotMadeDecision),
+        };
+
+        // Parses the comma-separated body of a [requires: ...] tag into conditions.
+        // 'what' labels the warning for unrecognized tokens ("condition" or "auto-advance condition").
+        private static void ParseConditions(string requirements, List<FMVCondition> conditions, string what, string sceneId)
+        {
+            foreach (var token in requirements.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string c = token.Trim();
+                bool matched = false;
+
+                foreach (var (prefix, type) in ConditionPrefixes)
+                {
+                    if (c.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                    {
+                        conditions.Add(new FMVCondition(type, c.Substring(prefix.Length).Trim()));
+                        matched = true;
+                        break;
+                    }
+                }
+
+                if (!matched)
+                    Debug.LogWarning($"[FMVParser] Unrecognized {what}: '{c}' in scene '{sceneId}'");
+            }
         }
     }
 }
