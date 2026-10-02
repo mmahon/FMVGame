@@ -25,7 +25,8 @@ namespace FMV.UI
             {
                 FMVManager.Instance.OnSceneLoaded += HandleSceneLoaded;
                 FMVManager.Instance.OnChoicePhaseStarted += HandleChoicePhase;
-                
+                FMVManager.Instance.OnVideoPlaybackStarted += HandleVideoPlaybackStarted;
+
                 // If the manager has already loaded the initial scene before we subscribed, 
                 // we should initialize our UI immediately to avoid missing it.
                 if (FMVManager.Instance.CurrentScene != null)
@@ -58,16 +59,14 @@ namespace FMV.UI
             }
         }
 
-        private void Update()
+        // Swap the freeze-frame for the live video once, when playback starts. After the clip ends nothing
+        // reassigns the texture, so with no freeze-frame image the video area holds the clip's last frame.
+        private void HandleVideoPlaybackStarted(Texture videoTexture)
         {
-            if (FMVManager.Instance != null && FMVManager.Instance.ActiveVideoPlayer != null && VideoArea != null)
-            {
-                if (FMVManager.Instance.ActiveVideoPlayer.isPlaying && FMVManager.Instance.ActiveVideoPlayer.texture != null)
-                {
-                    VideoArea.texture = FMVManager.Instance.ActiveVideoPlayer.texture;
-                    VideoArea.color = Color.white;
-                }
-            }
+            if (VideoArea == null || videoTexture == null) return;
+
+            VideoArea.texture = videoTexture;
+            VideoArea.color = Color.white;
         }
 
         private void HandleSceneLoaded(FMVScene scene)
@@ -157,6 +156,7 @@ namespace FMV.UI
             {
                 FMVManager.Instance.OnSceneLoaded -= HandleSceneLoaded;
                 FMVManager.Instance.OnChoicePhaseStarted -= HandleChoicePhase;
+                FMVManager.Instance.OnVideoPlaybackStarted -= HandleVideoPlaybackStarted;
             }
         }
     }
