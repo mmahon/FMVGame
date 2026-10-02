@@ -54,6 +54,14 @@ Sets conditions that must be met for the choice to appear. Multiple conditions c
 *   `decision:[flagName]` - Player must have triggered the specified decision flag.
 *   `!decision:[flagName]` - Player must NOT have triggered the specified decision flag.
 
+### Which Choices Are Shown
+The player sees at most 3 choices. When a scene has more than 3 valid choices (conditions met), they are ranked and the top 3 are kept; those 3 are then shown in random order.
+1.  **Choices with a `[requires: ...]` line rank first**, so a choice unlocked by an item, visit or decision always appears when it is valid. This includes negative conditions such as `!item:bomb`.
+2.  **Choices with no conditions rank next.**
+3.  **Within each group, file order decides.** Write the most important choices first.
+
+If more than 3 conditional choices are valid at once, only the first 3 of them (in file order) appear and no unconditional choices are shown. Keep that in mind when giving one scene many conditional exits.
+
 **`[sets: ...]`**
 *   `[sets: flag1, flag2]` - Sets one or more decision flags when the player clicks this choice.
 

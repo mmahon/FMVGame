@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using TMPro;
 using FMV.Core;
 using FMV.Data;
-using System.Linq;
 
 namespace FMV.UI
 {
@@ -76,27 +75,9 @@ namespace FMV.UI
             if (ChoicesContainer != null) ChoicesContainer.gameObject.SetActive(false);
             if (DescriptionText != null) DescriptionText.text = "";
             if (TitleText != null) TitleText.text = ""; 
-            Debug.Log("FMVUIController HandleSceneLoaded");
+
             // Load static image immediately so it acts as the "video" during the playback phase
-            Debug.Log("FMVUIController loading: " + $"{FMVManager.Instance.ImageAssetsPath}/{scene.Id}");
-            Texture2D staticImage = Resources.Load<Texture2D>($"{FMVManager.Instance.ImageAssetsPath}/{scene.Id}");
-            if (staticImage != null)
-            {
-                Debug.Log("FMVUIController image not null");
-                if (VideoArea != null) 
-                {
-                    VideoArea.texture = staticImage;
-                    VideoArea.color = Color.white;
-                }
-            }
-            else if (DefaultFallbackTexture != null)
-            {
-                if (VideoArea != null) 
-                {
-                    VideoArea.texture = DefaultFallbackTexture;
-                    VideoArea.color = Color.white;
-                }
-            }
+            ShowSceneImage(scene);
 
             if (ChoicesContainer != null)
             {
@@ -114,82 +95,60 @@ namespace FMV.UI
             if (ChoicesContainer != null) ChoicesContainer.gameObject.SetActive(true);
 
             // Re-apply static freeze-frame image as background for the choice selection phase
-            Texture2D staticImage = Resources.Load<Texture2D>($"{FMVManager.Instance.ImageAssetsPath}/{scene.Id}");
-            if (staticImage != null)
-            {
-                if (VideoArea != null) 
-                {
-                    VideoArea.texture = staticImage;
-                    VideoArea.color = Color.white;
-                }
-            }
-            else if (DefaultFallbackTexture != null)
-            {
-                if (VideoArea != null) 
-                {
-                    VideoArea.texture = DefaultFallbackTexture;
-                    VideoArea.color = Color.white;
-                }
-            }
+            ShowSceneImage(scene);
 
             if (ChoicesContainer != null && ChoiceButtonPrefab != null)
             {
-                var validChoices = scene.Choices.Where(c => c.IsAvailable()).ToList();
-                var choicesToDisplay = validChoices.Take(3).OrderBy(x => UnityEngine.Random.value).ToList();
-
-                foreach (var choice in choicesToDisplay)
+                foreach (var choice in FMVChoiceSelector.SelectForDisplay(scene.Choices))
                 {
-                    GameObject btnObj = Instantiate(ChoiceButtonPrefab, ChoicesContainer);
-                    btnObj.SetActive(true);
-                    TextMeshProUGUI btnText = btnObj.GetComponentInChildren<TextMeshProUGUI>();
-                    if (btnText != null) btnText.text = choice.DisplayText;
-                    else
-                    {
-                        Text legacyText = btnObj.GetComponentInChildren<Text>();
-                        if (legacyText != null) legacyText.text = choice.DisplayText;
-                    }
-
-                    Button btn = btnObj.GetComponent<Button>();
-                    if (btn != null)
-                    {
-                        var capturedChoice = choice;
-                        btn.onClick.AddListener(() => OnChoiceClicked(capturedChoice));
-                    }
+                    var captured = choice;
+                    AddChoiceButton(choice.DisplayText, () => FMVManager.Instance.MakeChoice(captured));
                 }
 
                 if (scene.Choices.Count == 0 && scene.IsEnding)
                 {
-                    GameObject btnObj = Instantiate(ChoiceButtonPrefab, ChoicesContainer);
-                    btnObj.SetActive(true);
-                    TextMeshProUGUI btnText = btnObj.GetComponentInChildren<TextMeshProUGUI>();
-                    if (btnText != null) btnText.text = "Restart";
-                    else
-                    {
-                        Text legacyText = btnObj.GetComponentInChildren<Text>();
-                        if (legacyText != null) legacyText.text = "Restart";
-                    }
-                    Button btn = btnObj.GetComponent<Button>();
-                    if (btn != null)
-                    {
-                        btn.onClick.AddListener(() => 
-                        {
-                            if (FMVTitleScreen.Instance != null)
-                            {
-                                FMVTitleScreen.Instance.ShowTitleScreen();
-                            }
-                            else
-                            {
-                                FMVManager.Instance.LoadScene(FMVManager.Instance.InitialSceneId);
-                            }
-                        });
-                    }
+                    AddChoiceButton("Restart", OnRestartClicked);
                 }
             }
         }
 
-        private void OnChoiceClicked(FMVChoice choice)
+        // Shows the scene's freeze-frame image (or the default fallback) in the video area.
+        private void ShowSceneImage(FMVScene scene)
         {
-            FMVManager.Instance.MakeChoice(choice);
+            if (VideoArea == null) return;
+
+            Texture2D image = Resources.Load<Texture2D>($"{FMVManager.Instance.ImageAssetsPath}/{scene.Id}");
+            if (image == null) image = DefaultFallbackTexture;
+            if (image == null) return;
+
+            VideoArea.texture = image;
+            VideoArea.color = Color.white;
+        }
+
+        private void AddChoiceButton(string label, UnityEngine.Events.UnityAction onClick)
+        {
+            GameObject btnObj = Instantiate(ChoiceButtonPrefab, ChoicesContainer);
+            btnObj.SetActive(true);
+
+            TextMeshProUGUI tmpText = btnObj.GetComponentInChildren<TextMeshProUGUI>();
+            if (tmpText != null)
+            {
+                tmpText.text = label;
+            }
+            else
+            {
+                Text legacyText = btnObj.GetComponentInChildren<Text>();
+                if (legacyText != null) legacyText.text = label;
+            }
+
+            Button btn = btnObj.GetComponent<Button>();
+            if (btn != null) btn.onClick.AddListener(onClick);
+        }
+
+        private void OnRestartClicked()
+        {
+            if (FMVTitleScreen.Instance != null) FMVTitleScreen.Instance.ShowTitleScreen();
+            else FMVManager.Instance.LoadScene(FMVManager.Instance.InitialSceneId);
         }
 
         private void OnDestroy()

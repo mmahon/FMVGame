@@ -22,5 +22,5 @@ Use the Unity CLI, not MCP Unity (it was removed; do not try to reconnect it).
 - `screenshot` has returned a blank blue frame so far; do not treat it as evidence of how the screen looks.
 
 ## Known open items
-- UI shows the first 3 valid choices and then shuffles them. The review flagged that as probably the wrong order (shuffle, then take 3); the TDD currently describes the existing behaviour.
+- Choice selection: valid conditional choices rank first, then unconditional ones, each in file order; the top 3 are kept and then shuffled (implemented in `FMVChoiceSelector`, documented in `HowToBuildYourOwnScene.md`, tested in `Assets/Tests/EditMode`). Run tests with `unity command run_tests --mode EditMode`.
 - Several scenes have no video or freeze-frame yet; `a2_end_win` is unreachable from the start scene.

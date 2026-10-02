@@ -28,7 +28,7 @@ Players navigate through video scenes, making meaningful choices at branch point
 
 ### Branching Model
 - **Choices per Branch**: A maximum of 3 choices are presented at each decision point.
-- **First Three Selection**: If a scene has more than 3 valid choices, the engine selects the first 3 valid choices (as ordered in the story text file) and shuffles them for display, allowing content creators to prioritize specific choices by ordering them first.
+- **Top Three Selection**: If a scene has more than 3 valid choices, the engine keeps the 3 highest-priority ones and shuffles them for display. Priority is: valid choices with conditions first (so a choice unlocked by an item, visit or decision always appears when it is valid), then unconditional choices, each group in the order written in the story text file.
 - **Conditional Choices**: Available choices change based on:
   - Previously visited scenes
   - Collected inventory items/evidence
@@ -38,7 +38,7 @@ Players navigate through video scenes, making meaningful choices at branch point
 
 ### Choice System
 - At each branch point, present up to 3 choices.
-- If more than 3 choices are eligible (valid/available) after condition evaluation, the system takes the first 3 eligible choices and shuffles their display order.
+- If more than 3 choices are eligible (valid/available) after condition evaluation, the system keeps the 3 highest-priority eligible choices (conditional choices first, then file order) and shuffles their display order.
 - Choices may have conditions that must be met to appear
 - Conditions can check: visited scenes, inventory items, previous decisions
 

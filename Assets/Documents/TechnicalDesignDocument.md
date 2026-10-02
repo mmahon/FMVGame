@@ -19,7 +19,7 @@ The FMV game is built around a scene-based state machine with conditional branch
   - Unique scene ID
   - Scene title and description text
   - Placeholder visual identifier (color)
-  - List of choices leading to other scenes (shuffled and limited to 3 at runtime if there are more)
+  - List of choices leading to other scenes (limited to the 3 highest-priority valid choices at runtime, then shuffled; see FMVUIController)
   - Optional: Items to add to inventory when visited
   - Optional: Decision flags to set when visited
 
@@ -83,7 +83,7 @@ The FMV game is built around a scene-based state machine with conditional branch
 - Displays:
   - **Video Area**: RawImage component displaying the RenderTexture with scene title (placeholder).
   - **Description Area**: Text for Scene description text.
-  - **Choice Buttons**: Up to 3 Unity UI Buttons for choices (takes the first 3 valid choices and shuffles their display order).
+  - **Choice Buttons**: Up to 3 Unity UI Buttons for choices (valid choices are ranked, conditional choices first and then unconditional ones, each in file order; the top 3 are kept and their display order is shuffled).
   - **Debug Info** (optional): Current scene, visited scenes, inventory.
 
 **Layout Structure**
