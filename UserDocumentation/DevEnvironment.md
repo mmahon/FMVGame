@@ -51,6 +51,7 @@ unity command editor_stop         # exit Play mode
 unity command recompile           # recompile scripts (the CLI reconnects after the reload)
 unity command console             # read Console output; add --level warn|error to filter
 unity command clear_console
+unity command run_tests --mode EditMode   # run EditMode tests (add --filter <name> to narrow)
 unity command eval_file <path>    # run C# from a .cs file in the live Editor
 unity command screenshot          # capture the Game view to Temp/pipeline-screenshots
 unity pipeline list               # per-project server state, including Safe Mode
