@@ -21,7 +21,7 @@ Players navigate through video scenes, making meaningful choices at branch point
 ## Game Structure
 
 ### Scene Architecture
-- **Total Scenes**: ~30 scenes
+- **Total Scenes**: ~30 scenes   (TBD final amount)
 - **Structure**: Hub-based flow with variety in the middle sections
 - **Endings**: 3 distinct endings that the narrative collapses toward
 - **Navigation**: Players can revisit locations (hub structure) based on available choices
