@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace FMV.UI
 {
@@ -13,14 +14,46 @@ namespace FMV.UI
         public Button OptionsButton;
         public Button CloseOptionsButton;
 
+        [Header("Content (optional)")]
+        [Tooltip("Title, subtitle, footer and freeze-frame. When unset, the texts and image placed in the scene are left as they are.")]
+        public FMVTitleScreenConfig Config;
+        public TMP_Text TitleText;
+        public TMP_Text SubtitleText;
+        public TMP_Text FooterText;
+        [Tooltip("Full-screen freeze-frame behind the menu. Needs an FMVAspectFillImage on the same object to crop instead of stretch.")]
+        public RawImage BackgroundImage;
+
         private void Awake()
         {
             Instance = this;
         }
 
+        /// <summary>Copies the config's title, subtitle, footer and freeze-frame into the UI.</summary>
+        public void ApplyConfig()
+        {
+            if (Config == null) return;
+
+            if (TitleText != null) TitleText.text = Config.Title;
+            if (SubtitleText != null) SubtitleText.text = Config.Subtitle;
+            if (FooterText != null) FooterText.text = Config.Footer;
+
+            if (BackgroundImage != null)
+            {
+                BackgroundImage.color = Config.FreezeFrameTint;
+
+                if (Config.FreezeFrame != null)
+                {
+                    var fill = BackgroundImage.GetComponent<FMVAspectFillImage>();
+                    if (fill != null) fill.SetTexture(Config.FreezeFrame);
+                    else BackgroundImage.texture = Config.FreezeFrame;
+                }
+            }
+        }
+
         private void Start()
         {
             transform.SetAsLastSibling();
+            ApplyConfig();
 
             if (TitleScreenPanel != null)
                 TitleScreenPanel.SetActive(true);
