@@ -74,7 +74,7 @@ The game maintains persistent state throughout the playthrough:
    - Full cinematic experience
 2. **Choice Phase**: Video ends, freezes on static image
    - Scene title appears overlaid
-   - Scene description visible
+   - Scene description visible (can be switched off with the `ShowDescription` setting)
    - Three choices appear (conditionally based on state)
 3. **Decision**: Player evaluates and selects choice
 4. **Transition**: Selected choice leads to next scene
@@ -94,22 +94,24 @@ The game maintains persistent state throughout the playthrough:
 ## Content Design
 
 ### Visual Style
-- Moody, atmospheric FMV-style still images
-- Film noir / mystery thriller aesthetic
-- Cinematic lighting with dramatic shadows
-- Realistic rendering with stylized composition
-- Dark, desaturated color palette with selective color highlights
+- Photoreal, cinematic imagery of a secure corporate research facility (the fictional Arkos Research Initiative)
+- Cold and controlled: brushed steel, glass, concrete, hard linear lighting, long sight-lines
+- Tension comes from being watched (cameras, glass walls, guards) rather than from gothic or noir shadow
+- Desaturated cool palette with selective warm and red accents
+- Flat, clean, corporate UI (no glow or holographic effects) that sits over the imagery
+- Full details are in `ArtDesignDocument.md`; UI layouts and sprites are in `Art/UI/README.md`
 
 ### Current Implementation
-- 27 atmospheric 2D images for all scenes
-- Each image crafted to match scene mood and description
-- Images enhance narrative immersion
-- Scene descriptions provide additional context
+- Each scene can have a pre-rendered video clip and a freeze-frame image. The clip plays first; the freeze-frame is the full-screen backdrop for the choice phase
+- Scenes missing a clip or image fall back gracefully (see Fallback Behavior); some scenes still have neither
+- The title screen and choice screen use the corporate UI kit, with title, subtitle and footer text driven by data
+- The scene description can be switched off (`ShowDescription`), which is useful while videos are still missing
+- Choice buttons grow to two lines when a label wraps
 
 ### Future Evolution
-- Real video footage can replace static images
+- Fill in the remaining clips and freeze-frames
 - Maintain same narrative structure and branching
-- Static images serve as concept references for video production
+- Freeze-frames should match the final frame of their clip, so the choice phase continues the video without a visible jump
 
 ## Design Pillars
 1. **Meaningful Choices**: Every decision should feel consequential
